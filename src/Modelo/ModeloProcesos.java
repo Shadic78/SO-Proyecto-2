@@ -16,33 +16,7 @@ import java.util.ArrayList;
  * 
  ************************************************************/
 public class ModeloProcesos {
-
-    public int terminaraUnProceso(ArrayList<CeldaMemoria> memoriaEnUso, ArrayList<Proceso> colaProcesos) {
-        Proceso procesoEnMemoria;
-        Proceso procesoEnCola;
-        int celda = -1;
-        for (int i = 0; i < memoriaEnUso.size(); i++) {
-            procesoEnMemoria = memoriaEnUso.get(i).getProceso();
-            procesoEnCola = colaProcesos.get(0);
-            if (procesoEnMemoria != null) {
-                int finalizacion = procesoEnMemoria.getLlegada() + procesoEnMemoria.getDuracion();
-                if (finalizacion <= procesoEnCola.getLlegada()) {
-                    celda = i;
-                    break;
-                }
-            }
-        }
-        return celda;
-    }
-
-    public void retirarProcesoEnMemoria(int celda) {
-        CeldaMemoria celdaDesocupada = Main.particiones.get(celda);
-        celdaDesocupada.setProceso(null);
-        celdaDesocupada.setDisponible(true);
-        Main.areasLibres.add(celdaDesocupada);
-        Main.particiones.remove(celda);
-    }
-
+    
     public boolean insertarProcesoEnMemoria(ArrayList<CeldaMemoria> areasLibres, ArrayList<CeldaMemoria> particiones,
             ArrayList<Proceso> colaProcesos, ArrayList<Proceso> colaAuxiliar) {
         Proceso procesoAInsertar = null;
@@ -129,16 +103,9 @@ public class ModeloProcesos {
             }
         }
         return insertado;
-    }
-
-    public boolean hayProcesosEnMemoria(ArrayList<CeldaMemoria> memoria) {
-        boolean existeProceso = false;
-        if (memoria.size() > 0) {
-            existeProceso = true;
-        }
-        return existeProceso;
-    }
-
+    }  
+    
+    // Retira de la memoria el siguiente proceso a terminar
     public void retirarSiguienteProceso(ArrayList<CeldaMemoria> particiones, ArrayList<CeldaMemoria> areasLibres) {
         System.out.println("Retirar proceso siguiente");
         // Encontrar el proceso con la llegada + duracion mas corta
@@ -161,6 +128,42 @@ public class ModeloProcesos {
         celdaDesocupada.setDisponible(true);
         areasLibres.add(celdaDesocupada);
         particiones.remove(celdaARetirar);
+    }    
+
+    // Devuelve el indice del proceso que terminara a continuacion
+    public int terminaraUnProceso(ArrayList<CeldaMemoria> memoriaEnUso, ArrayList<Proceso> colaProcesos) {
+        Proceso procesoEnMemoria;
+        Proceso procesoEnCola;
+        int celda = -1;
+        for (int i = 0; i < memoriaEnUso.size(); i++) {
+            procesoEnMemoria = memoriaEnUso.get(i).getProceso();
+            procesoEnCola = colaProcesos.get(0);
+            if (procesoEnMemoria != null) {
+                int finalizacion = procesoEnMemoria.getLlegada() + procesoEnMemoria.getDuracion();
+                if (finalizacion <= procesoEnCola.getLlegada()) {
+                    celda = i;
+                    break;
+                }
+            }
+        }
+        return celda;
+    }
+
+    // Retira la celda de la particion y la agrega a las areas libres
+    public void retirarProcesoEnMemoria(int celda) {
+        CeldaMemoria celdaDesocupada = Main.particiones.get(celda);
+        celdaDesocupada.setProceso(null);
+        celdaDesocupada.setDisponible(true);
+        Main.areasLibres.add(celdaDesocupada);
+        Main.particiones.remove(celda);
+    }
+
+    public boolean hayProcesosEnMemoria(ArrayList<CeldaMemoria> memoria) {
+        boolean existeProceso = false;
+        if (memoria.size() > 0) {
+            existeProceso = true;
+        }
+        return existeProceso;
     }
     
     public boolean hayProcesosEnColaAuxiliar(ArrayList<Proceso> cola) {
