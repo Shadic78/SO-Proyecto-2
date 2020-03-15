@@ -13,6 +13,7 @@ import Modelo.Proceso;
 import Vista.FrmMemoria;
 import Vista.Main;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -40,11 +41,24 @@ public class CtrlFrmMemoria {
             }
         }
         else {
-            if(modeloProcesos.hayProcesosEnMemoria(Main.particiones)) {
-                modeloProcesos.retirarSiguienteProceso(Main.particiones, Main.areasLibres);
+            if (modeloProcesos.hayProcesosEnMemoria(Main.particiones)) {
+                if(modeloProcesos.hayProcesosEnColaAuxiliar(Main.colaAuxiliarProcesos)) {
+                    if(!modeloProcesos.insertarProcesoEnMemoria(Main.areasLibres, Main.particiones, Main.colaProcesos, Main.colaAuxiliarProcesos)) {
+                        modeloProcesos.retirarSiguienteProceso(Main.particiones, Main.areasLibres); 
+                    }                    
+                }
+                else {
+                    modeloProcesos.retirarSiguienteProceso(Main.particiones, Main.areasLibres);   
+                }
             }
             else {
-                System.out.println("El programa termino");
+                if(modeloProcesos.hayProcesosEnColaAuxiliar(Main.colaAuxiliarProcesos)) {
+                    modeloProcesos.insertarProcesoEnMemoria(Main.areasLibres, Main.particiones, Main.colaProcesos, Main.colaAuxiliarProcesos);    
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "El programa termino");
+                    System.out.println("El programa termino");                    
+                }
             }
         }
         modeloMemoria.compactarMemoria(Main.areasLibres);
@@ -52,12 +66,13 @@ public class CtrlFrmMemoria {
         modeloTablas.actualizarTablaAreasLibres(form.getTableEspaciosLibres(), Main.areasLibres);
         modeloTablas.actualizarTablaParticiones(form.getTableParticiones(), Main.particiones);
         
-        System.out.println("\n");        
+        System.out.println("\n");
+        /*System.out.println("\n");        
         System.out.println("Libres: " + Main.areasLibres);
         System.out.println("Particiones: " + Main.particiones);
         System.out.println("Procesos: " + Main.colaProcesos);
         System.out.println("Aux: " + Main.colaAuxiliarProcesos);
-        System.out.println("\n");
+        System.out.println("\n");*/
     }
 
     public FrmMemoria getForm() {

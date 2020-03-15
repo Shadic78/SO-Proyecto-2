@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * 
  *  PARA QUE TODOS ESTOS METODOS FUNCIONEN SE DA POR HECHO 
  *  QUE LA COLA DE PROCESOS Y LA COLA AUXILIAR ESTAN ORDENADAS
- *  DE MANERA ASCENDENTEMENTE SEGUN LA LLEGADA
+ *  DE MANERA ASCENDENTE SEGUN LA LLEGADA
  * 
  ************************************************************/
 public class ModeloProcesos {
@@ -43,22 +43,79 @@ public class ModeloProcesos {
         Main.particiones.remove(celda);
     }
 
-    public void insertarProcesoEnMemoria(ArrayList<CeldaMemoria> areasLibres, ArrayList<CeldaMemoria> particiones,
+    public boolean insertarProcesoEnMemoria(ArrayList<CeldaMemoria> areasLibres, ArrayList<CeldaMemoria> particiones,
             ArrayList<Proceso> colaProcesos, ArrayList<Proceso> colaAuxiliar) {
-        Proceso proceso = colaProcesos.get(0);
+        Proceso procesoAInsertar = null;
+        boolean insertado = false;
+        // Primero checar la cola prioritaria
+        if(colaAuxiliar.size() > 0) {
+            procesoAInsertar = colaAuxiliar.get(0);
+            insertado = insertarProceso(areasLibres, particiones, procesoAInsertar);
+            if(insertado) {
+                System.out.println("Se inserto: " + procesoAInsertar.getNombre());
+                colaAuxiliar.remove(0);
+                return insertado;
+            }
+            else {
+                System.out.println("No se pudo insertar: " + procesoAInsertar.getNombre());                                
+            }
+        }
+        // Si no hay nada en la cola prioritaria
+        else {
+            procesoAInsertar = colaProcesos.get(0);
+            insertado = insertarProceso(areasLibres, particiones, procesoAInsertar);
+            if(insertado) {
+                System.out.println("Se inserto: " + procesoAInsertar.getNombre());                
+                colaProcesos.remove(0);
+                return insertado;
+            } 
+            else {
+                System.out.println("No se pudo insertar: " + procesoAInsertar.getNombre());                
+                colaAuxiliar.add(procesoAInsertar);
+                colaProcesos.remove(0);
+                return insertado;
+            }            
+        }
+        
+        /*********** 
+         * Si se llega aqui es por que se intento insertar un proceso
+         * de la cola auxiliar pero no se logro, por lo que se intentara
+         * insertar un proceso de la cola principal
+         **************/
+        if(!insertado && colaProcesos.size() > 0) {            
+            procesoAInsertar = colaProcesos.get(0);
+            insertado = insertarProceso(areasLibres, particiones, procesoAInsertar);
+            if(insertado) {
+                System.out.println("Se inserto: " + procesoAInsertar.getNombre());                                
+                colaProcesos.remove(0);
+                return insertado;
+            } 
+            else {
+                System.out.println("No se pudo insertar: " + procesoAInsertar.getNombre());                                
+                colaAuxiliar.add(procesoAInsertar);
+                colaProcesos.remove(0);
+                return insertado;
+            }  
+        }
+        
+        return insertado;
+    }
+    
+    private boolean insertarProceso(ArrayList<CeldaMemoria> areasLibres, ArrayList<CeldaMemoria> particiones,
+            Proceso procesoAInsertar) {
+        boolean insertado = false;
         for (int i = 0; i < areasLibres.size(); i++) {
             CeldaMemoria celda = areasLibres.get(i);
             int tamCelda = celda.getSize();
-            if (tamCelda >= proceso.getSize()) {
-                int tamRestante = celda.getSize() - proceso.getSize();
-                celda.setProceso(proceso);
-                celda.setSize(proceso.getSize());
+            if (tamCelda >= procesoAInsertar.getSize()) {
+                int tamRestante = celda.getSize() - procesoAInsertar.getSize();
+                celda.setProceso(procesoAInsertar);
+                celda.setSize(procesoAInsertar.getSize());
                 celda.setDisponible(false);
-                System.out.println("Se inserto: " + proceso.getNombre());
+                System.out.println("Se inserto: " + procesoAInsertar.getNombre());
                 areasLibres.remove(i);
                 particiones.add(celda);
-                colaProcesos.remove(0);
-                
+
                 // Crear una nueva celda si sobra espacio
                 if (tamRestante > 0) {
                     CeldaMemoria celdaNueva = new CeldaMemoria();
@@ -67,13 +124,11 @@ public class ModeloProcesos {
                     celdaNueva.setDisponible(true);
                     areasLibres.add(celdaNueva);
                 }
-                return;
+                insertado = true;
+                break;
             }
         }
-        // No se pudo insertar el proceso
-        System.out.println("No se pudo insertar " + proceso.getNombre());
-        colaAuxiliar.add(proceso);
-        colaProcesos.remove(0);
+        return insertado;
     }
 
     public boolean hayProcesosEnMemoria(ArrayList<CeldaMemoria> memoria) {
@@ -88,26 +143,32 @@ public class ModeloProcesos {
         System.out.println("Retirar proceso siguiente");
         // Encontrar el proceso con la llegada + duracion mas corta
         Proceso proceso = particiones.get(0).getProceso();
-        int celdaARetirar = -1;
+        int celdaARetirar = 0;
         int finMenor = proceso.getLlegada() + proceso.getDuracion();
         int fin2 = 0;
-        for (int i = 0; i < particiones.size(); i++) {
+        for (int i = 1; i < particiones.size(); i++) {
             proceso = particiones.get(i).getProceso();
             fin2 = proceso.getLlegada() + proceso.getDuracion();
-            if (fin2 <= finMenor) {
+            if (fin2 < finMenor) {
                 finMenor = fin2;
                 celdaARetirar = i;
             }
         }
 
-        if (celdaARetirar >= 0) {
-            System.out.println("Se retiro: " + particiones.get(celdaARetirar).getProceso().getNombre());
-            CeldaMemoria celdaDesocupada = particiones.get(celdaARetirar);
-            celdaDesocupada.setProceso(null);
-            celdaDesocupada.setDisponible(true);
-            areasLibres.add(celdaDesocupada);
-            particiones.remove(celdaARetirar);
+        System.out.println("Se retiro: " + particiones.get(celdaARetirar).getProceso().getNombre());
+        CeldaMemoria celdaDesocupada = particiones.get(celdaARetirar);
+        celdaDesocupada.setProceso(null);
+        celdaDesocupada.setDisponible(true);
+        areasLibres.add(celdaDesocupada);
+        particiones.remove(celdaARetirar);
+    }
+    
+    public boolean hayProcesosEnColaAuxiliar(ArrayList<Proceso> cola) {
+        boolean existeProceso = false;
+        if (cola.size() > 0) {
+            existeProceso = true;
         }
+        return existeProceso;   
     }
     
 }
