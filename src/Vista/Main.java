@@ -22,10 +22,6 @@ public class Main {
     public static ArrayList<Proceso> colaAuxiliarProcesos = new ArrayList<Proceso>();
     
     public static void main(String[] args) {
-        FrmMemoria ventana = new FrmMemoria();
-        CtrlFrmMemoria control = new CtrlFrmMemoria();
-        ventana.setControl(control);
-        control.setForm(ventana);
         
         Proceso p1 = new Proceso("A", 8, 1, 7);
         Proceso p2 = new Proceso("B", 14, 2, 7);
@@ -50,6 +46,10 @@ public class Main {
         inicial.setSize(54);
         areasLibres.add(inicial);
         
+        FrmMemoria ventana = new FrmMemoria();
+        CtrlFrmMemoria control = new CtrlFrmMemoria();
+        ventana.setControl(control);
+        control.setForm(ventana);        
         ventana.setVisible(true);
         
         System.out.println(Main.areasLibres);
