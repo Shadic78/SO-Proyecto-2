@@ -1,4 +1,4 @@
-package Modelo;
+package com.sw.model;
 
 /**
  *
@@ -7,19 +7,34 @@ package Modelo;
 public class CeldaMemoria
 {
 
-    private int inicio;
-    private int size;
+    private Proceso proceso;
     private boolean disponible;
     private boolean fragmentado;
-    private Proceso proceso;
+    private int inicio;
+    private int size;
 
     public CeldaMemoria()
     {
-        this.inicio = 0;
-        this.size = 0;
-        this.disponible = true;
-        this.fragmentado = false;
-        this.proceso = null;
+        this(null, true, false, 0, 0);
+    }
+
+    public CeldaMemoria(Proceso proceso, int inicio, int size)
+    {
+        this(proceso, true, false, inicio, size);
+    }
+
+    public CeldaMemoria(Proceso proceso, boolean disponible, int inicio, int size)
+    {
+        this(proceso, disponible, false, inicio, size);
+    }
+
+    public CeldaMemoria(Proceso proceso, boolean disponible, boolean fragmentado, int inicio, int size)
+    {
+        this.proceso = proceso;
+        this.disponible = disponible;
+        this.fragmentado = fragmentado;
+        this.inicio = inicio;
+        this.size = size;
     }
 
     public int getInicio()

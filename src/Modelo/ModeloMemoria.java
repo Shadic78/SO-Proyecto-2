@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Modelo;
 
 import java.util.ArrayList;
@@ -37,6 +32,7 @@ public class ModeloMemoria
     {
         boolean contiguoDerecha = celda1.getInicio() + celda1.getSize() == celda2.getInicio();
         boolean contiguoIzquierda = celda2.getInicio() + celda2.getSize() == celda1.getInicio();
+
         return contiguoDerecha || contiguoIzquierda;
     }
 
