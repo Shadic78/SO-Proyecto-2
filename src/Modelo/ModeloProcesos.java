@@ -86,7 +86,6 @@ public class ModeloProcesos {
                 celda.setProceso(procesoAInsertar);
                 celda.setSize(procesoAInsertar.getSize());
                 celda.setDisponible(false);
-                System.out.println("Se inserto: " + procesoAInsertar.getNombre());
                 areasLibres.remove(i);
                 particiones.add(celda);
 

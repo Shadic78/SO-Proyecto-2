@@ -28,6 +28,7 @@ public class Main {
         Proceso p3 = new Proceso("C", 18, 3, 4);
         Proceso p4 = new Proceso("D", 6, 4, 6);
         Proceso p5 = new Proceso("E", 14, 5, 5);*/
+        
         Proceso p1 = new Proceso("P1", 3, 2, 9);
         Proceso p2 = new Proceso("P2", 18, 2, 12);
         Proceso p3 = new Proceso("P3", 20, 4, 15);
