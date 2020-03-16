@@ -54,9 +54,8 @@ public class VistaController implements Initializable, Controller<ObservableList
     {
         ram = new RAM();
         tableManager = new TableManager();
-        grafico = new Grafico(panel);
+        grafico = new Grafico(panel, 64, 10);
         initTablas();
-        grafico.dibujarRepresentacionGrafica(null, null);
     }
 
     @Override
@@ -67,6 +66,7 @@ public class VistaController implements Initializable, Controller<ObservableList
         tablaProcesos.setItems(colaProcesos);
         tablaAreasLibres.setItems(ram.getAreasLibres());
         tablaParticiones.setItems(ram.getParticiones());
+        actualizarGrafico();
     }
 
     private void initTablas()
@@ -74,6 +74,15 @@ public class VistaController implements Initializable, Controller<ObservableList
         tableManager.inicializarTablaProcesos(tablaProcesos);
         tableManager.inicializarTablaAreasLibres(tablaAreasLibres);
         tableManager.inicializarTablaParticiones(tablaParticiones);
+    }
+
+    private void actualizarGrafico()
+    {
+        Platform.runLater(() ->
+        {
+            grafico.refrescarGrafico();
+            grafico.dibujarRepresentacionGrafica(ram.getAreasLibres(), ram.getParticiones());
+        });
     }
 
     @Override
@@ -94,6 +103,7 @@ public class VistaController implements Initializable, Controller<ObservableList
     private void sigPaso(ActionEvent e)
     {
         os.siguienteMomento();
+        actualizarGrafico();
     }
 
 }
