@@ -40,7 +40,9 @@ public class ModeloMemoria
     {
         if (celda2.getInicio() < celda1.getInicio())
             celda1.setInicio(celda2.getInicio());
+
         celda1.setSize(celda1.getSize() + celda2.getSize());
+
         return celda1;
     }
 

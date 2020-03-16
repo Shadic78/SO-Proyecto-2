@@ -87,6 +87,12 @@ public class CeldaMemoria
         this.proceso = proceso;
     }
 
+    public void liberar()
+    {
+        setProceso(null);
+        setDisponible(true);
+    }
+
     @Override
     public String toString()
     {
