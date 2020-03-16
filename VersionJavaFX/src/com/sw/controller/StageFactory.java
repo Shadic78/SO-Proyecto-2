@@ -63,7 +63,6 @@ public class StageFactory
         } catch (IOException ex)
         {
             ex.printStackTrace();
-            System.out.println(ex.getMessage());
         }
 
         return null;

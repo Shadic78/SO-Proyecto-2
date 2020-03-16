@@ -104,6 +104,13 @@ public class VistaController implements Initializable, Controller<ObservableList
     {
         os.siguienteMomento();
         actualizarGrafico();
+        actualizarTablas();
+    }
+
+    private void actualizarTablas()
+    {
+        tablaAreasLibres.refresh();
+        tablaParticiones.refresh();
     }
 
 }
