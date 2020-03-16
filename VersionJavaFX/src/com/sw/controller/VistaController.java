@@ -5,6 +5,7 @@ import com.sw.model.OS;
 import com.sw.model.Particion;
 import com.sw.model.Proceso;
 import com.sw.model.RAM;
+import com.sw.view.Grafico;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,7 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 /**
  * FXML Controller class
@@ -36,13 +37,14 @@ public class VistaController implements Initializable, Controller<ObservableList
     @FXML
     private Button btnSigPaso;
     @FXML
-    private AnchorPane grafico;
+    private Pane panel;
     @FXML
     private Label estado;
 
     private OS os;
     private RAM ram;
     private TableManager tableManager;
+    private Grafico grafico;
 
     /**
      * Initializes the controller class.
@@ -50,9 +52,11 @@ public class VistaController implements Initializable, Controller<ObservableList
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        initTablas();
         ram = new RAM();
         tableManager = new TableManager();
+        grafico = new Grafico(panel);
+        initTablas();
+        grafico.dibujarRepresentacionGrafica(null, null);
     }
 
     @Override

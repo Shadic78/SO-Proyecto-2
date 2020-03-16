@@ -19,7 +19,7 @@ public class MemoryHandler extends Observable implements Notificador
     }
 
     /**
-     * Une todas las {@link CeldaMemoria} que estén contiguas en la {@link RAM}.
+     * Une todas las {@link AreaLibre} que estén contiguas en la {@link RAM}.
      */
     public void compactarMemoria()
     {
@@ -59,20 +59,20 @@ public class MemoryHandler extends Observable implements Notificador
     }
 
     /**
-     * Une dos {@link CeldaMemoria} que estén contiguas en la {@link RAM}.
+     * Une dos {@link AreaLibre} que estén contiguas en la {@link RAM}.
      */
-    private CeldaMemoria unirCeldas(CeldaMemoria celda1, CeldaMemoria celda2)
+    private AreaLibre unirCeldas(AreaLibre areaLibre1, AreaLibre areaLibre2)
     {
-        if (celda2.getInicio() < celda1.getInicio())
-            celda1.setInicio(celda2.getInicio());
+        if (areaLibre2.getInicio() < areaLibre1.getInicio())
+            areaLibre1.setInicio(areaLibre2.getInicio());
 
-        celda1.setSize(celda1.getSize() + celda2.getSize());
+        areaLibre1.setSize(areaLibre1.getSize() + areaLibre2.getSize());
 
-        return celda1;
+        return areaLibre1;
     }
 
     /**
-     * Ordena las {@link CeldaMemoria} de la {@link RAM} de acuerdo a su posición en la memoria.
+     * Ordena las {@link AreaLibre} de la {@link RAM} de acuerdo a su posición en la memoria.
      */
     private void ordenarMemoria()
     {

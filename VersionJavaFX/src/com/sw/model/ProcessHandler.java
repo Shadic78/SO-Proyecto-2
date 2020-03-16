@@ -94,18 +94,18 @@ public class ProcessHandler extends Observable implements Notificador
     {
         for (int i = 0; i < ram.getAreasLibres().size(); i++)
         {
-            AreaLibre celda = ram.getAreaLibre(i);
-            int tamCelda = celda.getSize();
+            AreaLibre areaLibre = ram.getAreaLibre(i);
+            int tamCelda = areaLibre.getSize();
 
             if (tamCelda >= procesoAInsertar.getSize())
             {
-                int tamRestante = celda.getSize() - procesoAInsertar.getSize();
+                int tamRestante = areaLibre.getSize() - procesoAInsertar.getSize();
                 ram.eliminarAreaLibre(i);
-                ram.anadirParticion(new Particion(procesoAInsertar, procesoAInsertar.getSize()));
+                ram.anadirParticion(new Particion(procesoAInsertar, areaLibre.getInicio(), procesoAInsertar.getSize()));
 
                 // Crear una nueva celda si sobra espacio.
                 if (tamRestante > 0)
-                    ram.anadirAreaLibre(new AreaLibre(celda.getInicio() + celda.getSize(), tamRestante));
+                    ram.anadirAreaLibre(new AreaLibre(areaLibre.getInicio() + procesoAInsertar.getSize(), tamRestante));
 
                 return true;
             }

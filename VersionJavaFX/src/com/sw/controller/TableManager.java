@@ -85,7 +85,7 @@ public class TableManager
                     c.setCellValueFactory(cellData -> new SimpleStringProperty(((Particion) (((TableColumn.CellDataFeatures) cellData).getValue())).getSize() + " K"));
                     break;
                 case 3:
-                    c.setCellValueFactory(cellData -> new SimpleStringProperty("Disponible"));
+                    c.setCellValueFactory(cellData -> new SimpleStringProperty("Asignado"));
                     break;
                 case 4:
                     c.setCellValueFactory(cellData -> new SimpleStringProperty(((Particion) (((TableColumn.CellDataFeatures) cellData).getValue())).getProceso().getNombre()));
