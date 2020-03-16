@@ -1,8 +1,8 @@
 package com.sw.model;
 
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -15,7 +15,7 @@ public class OS extends Observable implements Observer, Notificador
     private final MemoryHandler memoryHandler;
     private final ProcessHandler processHandler;
 
-    public OS(RAM ram, ArrayList<Proceso> colaProcesos)
+    public OS(RAM ram, ObservableList<Proceso> colaProcesos)
     {
         memoryHandler = new MemoryHandler(ram);
         processHandler = new ProcessHandler(ram, colaProcesos);

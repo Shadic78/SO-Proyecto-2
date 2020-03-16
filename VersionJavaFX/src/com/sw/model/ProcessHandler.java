@@ -1,7 +1,8 @@
 package com.sw.model;
 
-import java.util.ArrayList;
 import java.util.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -11,14 +12,14 @@ public class ProcessHandler extends Observable implements Notificador
 {
 
     private final RAM ram;
-    private final ArrayList<Proceso> colaProcesos;
-    private final ArrayList<Proceso> procesosEnEspera;
+    private final ObservableList<Proceso> colaProcesos;
+    private final ObservableList<Proceso> procesosEnEspera;
 
-    public ProcessHandler(RAM ram, ArrayList<Proceso> colaProcesos)
+    public ProcessHandler(RAM ram, ObservableList<Proceso> colaProcesos)
     {
         this.ram = ram;
         this.colaProcesos = colaProcesos;
-        procesosEnEspera = new ArrayList<>();
+        procesosEnEspera = FXCollections.observableArrayList();
     }
 
     public boolean insertarProcesoEnMemoria()
@@ -29,51 +30,51 @@ public class ProcessHandler extends Observable implements Notificador
         // Primero checamos la cola de espera.
         if (hayProcesosEnEspera())
         {
-            procesoAInsertar = procesosEnEspera.get(0); // Obtenemos al primer proceso que esté esperando.
+            procesoAInsertar = obtenerSigProcesoEnEspera(); // Obtenemos al primer proceso que esté ESPERANDO.
             insertado = insertarProceso(procesoAInsertar); // Tratamos de añadirlo a la RAM.
 
             if (insertado) // Si pudimos añadirlo.
             {
                 notificar("Se insertó: " + procesoAInsertar.getNombre());
-                procesosEnEspera.remove(0); // Lo eliminamos de la cola de espera.
+                eliminarSigProcesoEnEspera(); // Lo eliminamos de la cola de espera.
                 return insertado;
 
             } else if (hayProcesosPorDespachar()) // Si se llegamos hasta aquí es porque se intentó insertar un proceso de la cola de espera pero no se logró, por lo que se intentará insertar un proceso de la cola principal.
             {
-                procesoAInsertar = colaProcesos.get(0);
+                procesoAInsertar = obtenerSigProcesoEnCola();
                 insertado = insertarProceso(procesoAInsertar);
 
                 if (insertado)
                 {
                     notificar("Se insertó: " + procesoAInsertar.getNombre());
-                    colaProcesos.remove(0);
+                    eliminarSigProcesoEnCola();
                     return insertado;
 
                 } else
                 {
                     notificar("No se pudo insertar: " + procesoAInsertar.getNombre());
-                    procesosEnEspera.add(procesoAInsertar);
-                    colaProcesos.remove(0);
+                    anadirProcesoEnEspera(procesoAInsertar);
+                    eliminarSigProcesoEnCola();
                     return insertado;
                 }
             }
 
         } else // Si no hay nada en la cola de espera.
         {
-            procesoAInsertar = colaProcesos.get(0); // Tomamos al primer proceso de la cola de procesos.
+            procesoAInsertar = obtenerSigProcesoEnCola(); // Tomamos al primer proceso de la cola de procesos.
             insertado = insertarProceso(procesoAInsertar); // Tratamos de insertarlo en la RAM.
 
             if (insertado) // Si se pudo insertar.
             {
                 notificar("Se insertó: " + procesoAInsertar.getNombre());
-                colaProcesos.remove(0); // Lo eliminamos de la cola de procesos.
+                eliminarSigProcesoEnCola(); // Lo eliminamos de la cola de procesos.
                 return insertado;
 
             } else
             {
                 notificar("No se pudo insertar: " + procesoAInsertar.getNombre());
-                procesosEnEspera.add(procesoAInsertar); // Añadimos el proceso a la cola de espera, no se pudo añadir a la RAM.
-                colaProcesos.remove(0); // Lo sacamos de la cola de procesos.
+                anadirProcesoEnEspera(procesoAInsertar); // Añadimos el proceso a la cola de espera, no se pudo añadir a la RAM.
+                eliminarSigProcesoEnCola(); // Lo sacamos de la cola de procesos.
                 return insertado;
             }
         }
@@ -93,19 +94,18 @@ public class ProcessHandler extends Observable implements Notificador
     {
         for (int i = 0; i < ram.getAreasLibres().size(); i++)
         {
-            CeldaMemoria celda = ram.getAreaLibre(i);
+            AreaLibre celda = ram.getAreaLibre(i);
             int tamCelda = celda.getSize();
 
             if (tamCelda >= procesoAInsertar.getSize())
             {
                 int tamRestante = celda.getSize() - procesoAInsertar.getSize();
-                celda.ocupar(procesoAInsertar, procesoAInsertar.getSize());
                 ram.eliminarAreaLibre(i);
-                ram.anadirParticion(celda);
+                ram.anadirParticion(new Particion(procesoAInsertar, procesoAInsertar.getSize()));
 
                 // Crear una nueva celda si sobra espacio.
                 if (tamRestante > 0)
-                    ram.anadirAreaLibre(new CeldaMemoria(celda.getInicio() + celda.getSize(), tamRestante));
+                    ram.anadirAreaLibre(new AreaLibre(celda.getInicio() + celda.getSize(), tamRestante));
 
                 return true;
             }
@@ -115,25 +115,24 @@ public class ProcessHandler extends Observable implements Notificador
     }
 
     /**
-     * Elimina la {@link CeldaMemoria} especificada de la memoria {@link RAM}.
+     * Elimina la {@link Particion} especificada de la memoria {@link RAM}.
      *
-     * @param celdaMemoria La {@link CeldaMemoria} ha ser removida.
+     * @param celdaMemoria La {@link Particion} ha ser removida.
      */
-    public void retirarProcesoEnMemoria(int indiceCeldaMemoria)
+    public void retirarProcesoEnMemoria(int indiceParticion)
     {
-        retirarProcesoEnMemoria(ram.getParticion(indiceCeldaMemoria));
+        retirarProcesoEnMemoria(ram.getParticion(indiceParticion));
     }
 
     /**
-     * Elimina la {@link CeldaMemoria} especificada de la memoria {@link RAM}.
+     * Elimina la {@link Particion} especificada de la memoria {@link RAM}.
      *
-     * @param celdaMemoria La {@link CeldaMemoria} ha ser removida.
+     * @param particion La {@link Particion} ha ser removida.
      */
-    public void retirarProcesoEnMemoria(CeldaMemoria celdaMemoria)
+    public void retirarProcesoEnMemoria(Particion particion)
     {
-        celdaMemoria.liberar();
-        ram.anadirAreaLibre(celdaMemoria);
-        ram.eliminarParticion(celdaMemoria);
+        ram.anadirAreaLibre(new AreaLibre(particion));
+        ram.eliminarParticion(particion);
     }
 
     /**
@@ -143,7 +142,7 @@ public class ProcessHandler extends Observable implements Notificador
      */
     public int siguienteProcesoATerminar()
     {
-        ArrayList<CeldaMemoria> particiones = ram.getParticiones();
+        ObservableList<Particion> particiones = ram.getParticiones();
 
         for (int i = 0; i < particiones.size(); i++)
         {
@@ -164,10 +163,10 @@ public class ProcessHandler extends Observable implements Notificador
      */
     public void retirarSiguienteProceso()
     {
-        ArrayList<CeldaMemoria> particiones = ram.getParticiones();
+        ObservableList<Particion> particiones = ram.getParticiones();
 
         // Encontrar el proceso con la llegada + duración más corta.
-        CeldaMemoria celdaARetirar = particiones.get(0);
+        Particion celdaARetirar = particiones.get(0);
         Proceso proceso = particiones.get(0).getProceso();
         int menorTiempoFinalizacion = proceso.getLlegada() + proceso.getDuracion();
 
@@ -195,6 +194,56 @@ public class ProcessHandler extends Observable implements Notificador
         clearChanged();
     }
 
+    private void anadirProcesoEnEspera(Proceso procesoEnEspera)
+    {
+        procesosEnEspera.add(procesoEnEspera);
+    }
+
+    private void anadirProcesoEnCola(Proceso procesoEnCola)
+    {
+        colaProcesos.add(procesoEnCola);
+    }
+
+    private Proceso obtenerSigProcesoEnEspera()
+    {
+        return obtenerProcesoEnEspera(0);
+    }
+
+    private Proceso obtenerSigProcesoEnCola()
+    {
+        return obtenerProcesoEnCola(0);
+    }
+
+    private Proceso obtenerProcesoEnEspera(int indexProcesoEspera)
+    {
+        return procesosEnEspera.get(indexProcesoEspera);
+    }
+
+    private Proceso obtenerProcesoEnCola(int indexProcesoCola)
+    {
+        return colaProcesos.get(indexProcesoCola);
+    }
+
+    private void eliminarSigProcesoEnEspera()
+    {
+        eliminarProcesoEnEspera(0);
+    }
+
+    private void eliminarSigProcesoEnCola()
+    {
+        eliminarProcesoEnCola(0);
+    }
+
+    private void eliminarProcesoEnEspera(int indexProcesoEspera)
+    {
+        procesosEnEspera.remove(indexProcesoEspera);
+    }
+
+    private void eliminarProcesoEnCola(int indexProcesoCola)
+    {
+        colaProcesos.remove(indexProcesoCola);
+    }
+
     public boolean hayProcesosEnEspera()
     {
         return !getProcesosEspera().isEmpty();
@@ -210,12 +259,12 @@ public class ProcessHandler extends Observable implements Notificador
         return !ram.getParticiones().isEmpty();
     }
 
-    public ArrayList<Proceso> getColaProcesos()
+    public ObservableList<Proceso> getColaProcesos()
     {
         return colaProcesos;
     }
 
-    public ArrayList<Proceso> getProcesosEspera()
+    public ObservableList<Proceso> getProcesosEspera()
     {
         return procesosEnEspera;
     }

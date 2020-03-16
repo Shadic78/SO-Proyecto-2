@@ -11,6 +11,7 @@ public class Proceso
     private int size;
     private int llegada;
     private int duracion;
+    private int nProceso;
 
     public Proceso(String nombre, int size, int llegada, int duracion)
     {
@@ -60,10 +61,20 @@ public class Proceso
         this.duracion = duracion;
     }
 
+    public int getNProceso()
+    {
+        return nProceso;
+    }
+
+    public void setNProceso(int nProceso)
+    {
+        this.nProceso = nProceso;
+    }
+
     @Override
     public String toString()
     {
-        return getNombre();
+        return "Proceso{" + "nombre=" + nombre + ", size=" + size + ", llegada=" + llegada + ", duracion=" + duracion + ", nProceso=" + nProceso + '}';
     }
 
 }

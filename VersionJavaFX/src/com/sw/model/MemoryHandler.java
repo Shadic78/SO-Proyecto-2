@@ -1,8 +1,8 @@
 package com.sw.model;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Observable;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -23,23 +23,39 @@ public class MemoryHandler extends Observable implements Notificador
      */
     public void compactarMemoria()
     {
-        ArrayList<CeldaMemoria> areasLibres = ram.getAreasLibres();
+        ObservableList<AreaLibre> areasLibres = ram.getAreasLibres();
 
         ordenarMemoria(); // Se ordena las celdas de memoria de acuerdo a su posición el la RAM.
 
         for (int i = 0; i < areasLibres.size() - 1; i++)
         {
-            CeldaMemoria celdaActual = areasLibres.get(i);
-            CeldaMemoria celdaSiguiente = areasLibres.get(i + 1);
+            AreaLibre areaLibreActual = areasLibres.get(i);
+            AreaLibre areaLibreSig = areasLibres.get(i + 1);
 
             //Si las dos celdas de memoria están disponibles, procede a unirlas.
-            if (celdaActual.isDisponible() && celdaSiguiente.isDisponible())
+            if (sonContiguas(areaLibreActual, areaLibreSig))
             {
-                unirCeldas(celdaActual, celdaSiguiente);
-                areasLibres.remove(celdaSiguiente);
+                unirCeldas(areaLibreActual, areaLibreSig);
+                areasLibres.remove(areaLibreSig);
                 i--;
             }
         }
+    }
+
+    /**
+     * Nos dice si dos {@link AreaLibre} en la {@link RAM} son contiguas.
+     *
+     * @param areaLibre1 El primer {@link AreaLibre}
+     * @param areaLibre2 El segundo {@link AreaLibre}
+     *
+     * @return <code>true</code> si las dos {@link AreaLibre} son contiguas, <code>false</code> en caso contrario.
+     */
+    private boolean sonContiguas(AreaLibre areaLibre1, AreaLibre areaLibre2)
+    {
+        boolean contiguoDerecha = areaLibre1.getInicio() + areaLibre1.getSize() == areaLibre2.getInicio();
+        boolean contiguoIzquierda = areaLibre2.getInicio() + areaLibre2.getSize() == areaLibre1.getInicio();
+
+        return contiguoDerecha || contiguoIzquierda;
     }
 
     /**

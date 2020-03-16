@@ -1,7 +1,8 @@
 package com.sw.model;
 
-import java.util.ArrayList;
 import java.util.RandomAccess;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -10,61 +11,61 @@ import java.util.RandomAccess;
 public class RAM implements RandomAccess, Volatil
 {
 
-    private final ArrayList<CeldaMemoria> areasLibres;
-    private final ArrayList<CeldaMemoria> particiones;
+    private final ObservableList<AreaLibre> areasLibres;
+    private final ObservableList<Particion> particiones;
 
     public RAM()
     {
-        areasLibres = new ArrayList<>();
-        particiones = new ArrayList<>();
+        areasLibres = FXCollections.observableArrayList();
+        particiones = FXCollections.observableArrayList();
     }
 
-    public void anadirAreaLibre(CeldaMemoria celdaMemoria)
+    public void anadirAreaLibre(AreaLibre areaLibre)
     {
-        areasLibres.add(celdaMemoria);
+        areasLibres.add(areaLibre);
     }
 
-    public void eliminarAreaLibre(CeldaMemoria celdaMemoria)
+    public void eliminarAreaLibre(AreaLibre areaLibre)
     {
-        areasLibres.remove(celdaMemoria);
+        areasLibres.remove(areaLibre);
     }
 
-    public void eliminarAreaLibre(int indiceCeldaMemoria)
+    public void eliminarAreaLibre(int indiceAreaLibre)
     {
-        areasLibres.remove(indiceCeldaMemoria);
+        areasLibres.remove(indiceAreaLibre);
     }
 
-    public void anadirParticion(CeldaMemoria celdaMemoria)
+    public void anadirParticion(Particion particion)
     {
-        particiones.add(celdaMemoria);
+        particiones.add(particion);
     }
 
-    public void eliminarParticion(CeldaMemoria celdaMemoria)
+    public void eliminarParticion(Particion particion)
     {
-        particiones.remove(celdaMemoria);
+        particiones.remove(particion);
     }
 
-    public void eliminarParticion(int indiceCeldaMemoria)
+    public void eliminarParticion(int indiceParticion)
     {
-        particiones.remove(indiceCeldaMemoria);
+        particiones.remove(indiceParticion);
     }
 
-    public CeldaMemoria getAreaLibre(int indiceCeldaMemoria)
+    public AreaLibre getAreaLibre(int indiceAreaLibre)
     {
-        return areasLibres.get(indiceCeldaMemoria);
+        return areasLibres.get(indiceAreaLibre);
     }
 
-    public ArrayList<CeldaMemoria> getAreasLibres()
+    public ObservableList<AreaLibre> getAreasLibres()
     {
         return areasLibres;
     }
 
-    public CeldaMemoria getParticion(int indiceCeldaMemoria)
+    public Particion getParticion(int indiceParticion)
     {
-        return particiones.get(indiceCeldaMemoria);
+        return particiones.get(indiceParticion);
     }
 
-    public ArrayList<CeldaMemoria> getParticiones()
+    public ObservableList<Particion> getParticiones()
     {
         return particiones;
     }
