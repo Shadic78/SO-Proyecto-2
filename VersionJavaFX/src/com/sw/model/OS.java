@@ -1,13 +1,15 @@
 package com.sw.model;
 
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
  * @author HikingCarrot7
  */
-public class OS
+@OSVersion(version = "Windows 10")
+public class OS extends Observable implements Observer, Notificador
 {
 
     private final MemoryHandler memoryHandler;
@@ -17,13 +19,19 @@ public class OS
     {
         memoryHandler = new MemoryHandler(ram);
         processHandler = new ProcessHandler(ram, colaProcesos);
+
+        memoryHandler.addObserver(this);
+        processHandler.addObserver(this);
     }
 
+    /**
+     * Siguiente momento para este sistema operativo.
+     */
     public void siguienteMomento()
     {
         if (processHandler.hayProcesosPorDespachar())
         {
-            int celdaATerminar = processHandler.terminaraUnProceso();
+            int celdaATerminar = processHandler.siguienteProcesoATerminar();
 
             if (celdaATerminar >= 0)
                 processHandler.retirarProcesoEnMemoria(celdaATerminar);
@@ -35,6 +43,7 @@ public class OS
             {
                 if (!processHandler.insertarProcesoEnMemoria())
                     processHandler.retirarSiguienteProceso();
+
             } else
                 processHandler.retirarSiguienteProceso();
 
@@ -42,12 +51,23 @@ public class OS
             processHandler.insertarProcesoEnMemoria();
 
         else
-        {
-            JOptionPane.showMessageDialog(null, "El programa terminó");
-            System.out.println("El programa terminó");
-        }
+            notificar("El programa ha terminado");
 
         memoryHandler.compactarMemoria();
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        notificar(arg.toString());
+    }
+
+    @Override
+    public void notificar(String mensaje)
+    {
+        setChanged();
+        notifyObservers(mensaje);
+        clearChanged();
     }
 
 }

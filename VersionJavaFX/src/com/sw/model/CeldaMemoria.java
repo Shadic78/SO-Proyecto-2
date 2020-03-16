@@ -18,6 +18,11 @@ public class CeldaMemoria
         this(null, true, false, 0, 0);
     }
 
+    public CeldaMemoria(int inicio, int size)
+    {
+        this(null, true, false, inicio, size);
+    }
+
     public CeldaMemoria(Proceso proceso, int inicio, int size)
     {
         this(proceso, true, false, inicio, size);
@@ -91,6 +96,21 @@ public class CeldaMemoria
     {
         setProceso(null);
         setDisponible(true);
+    }
+
+    public void ocupar(Proceso proceso, int size)
+    {
+        setProceso(proceso);
+        setSize(size);
+        setDisponible(false);
+    }
+
+    public void ocupar(Proceso proceso, int inicio, int size)
+    {
+        setProceso(proceso);
+        setInicio(inicio);
+        setSize(size);
+        setDisponible(false);
     }
 
     @Override

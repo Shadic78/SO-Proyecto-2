@@ -7,23 +7,16 @@ import java.util.RandomAccess;
  *
  * @author HikingCarrot7
  */
-public class RAM implements RandomAccess
+public class RAM implements RandomAccess, Volatil
 {
 
     private final ArrayList<CeldaMemoria> areasLibres;
     private final ArrayList<CeldaMemoria> particiones;
-    private final ArrayList<Proceso> procesosUsandome;
 
     public RAM()
     {
         areasLibres = new ArrayList<>();
         particiones = new ArrayList<>();
-        procesosUsandome = new ArrayList<>();
-    }
-
-    public boolean puedoInsertarProceso(Proceso procesoAInsertar)
-    {
-        return areasLibres.stream().anyMatch(celda -> celda.getSize() >= procesoAInsertar.getSize());
     }
 
     public void anadirAreaLibre(CeldaMemoria celdaMemoria)
@@ -36,6 +29,11 @@ public class RAM implements RandomAccess
         areasLibres.remove(celdaMemoria);
     }
 
+    public void eliminarAreaLibre(int indiceCeldaMemoria)
+    {
+        areasLibres.remove(indiceCeldaMemoria);
+    }
+
     public void anadirParticion(CeldaMemoria celdaMemoria)
     {
         particiones.add(celdaMemoria);
@@ -46,9 +44,24 @@ public class RAM implements RandomAccess
         particiones.remove(celdaMemoria);
     }
 
+    public void eliminarParticion(int indiceCeldaMemoria)
+    {
+        particiones.remove(indiceCeldaMemoria);
+    }
+
+    public CeldaMemoria getAreaLibre(int indiceCeldaMemoria)
+    {
+        return areasLibres.get(indiceCeldaMemoria);
+    }
+
     public ArrayList<CeldaMemoria> getAreasLibres()
     {
         return areasLibres;
+    }
+
+    public CeldaMemoria getParticion(int indiceCeldaMemoria)
+    {
+        return particiones.get(indiceCeldaMemoria);
     }
 
     public ArrayList<CeldaMemoria> getParticiones()
@@ -56,9 +69,11 @@ public class RAM implements RandomAccess
         return particiones;
     }
 
-    public ArrayList<Proceso> getProcesosUsandome()
+    @Override
+    public void eliminarTodosDatos()
     {
-        return procesosUsandome;
+        areasLibres.clear();
+        particiones.clear();
     }
 
 }

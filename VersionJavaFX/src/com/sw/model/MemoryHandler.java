@@ -2,12 +2,13 @@ package com.sw.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Observable;
 
 /**
  *
  * @author HikingCarrot7
  */
-public class MemoryHandler
+public class MemoryHandler extends Observable implements Notificador
 {
 
     private final RAM ram;
@@ -18,19 +19,20 @@ public class MemoryHandler
     }
 
     /**
-     * Une dos {@link CeldaMemoria} que estén contiguas en la {@link RAM}.
+     * Une todas las {@link CeldaMemoria} que estén contiguas en la {@link RAM}.
      */
     public void compactarMemoria()
     {
         ArrayList<CeldaMemoria> areasLibres = ram.getAreasLibres();
 
-        ordenarMemoria(areasLibres);
+        ordenarMemoria(); // Se ordena las celdas de memoria de acuerdo a su posición el la RAM.
 
         for (int i = 0; i < areasLibres.size() - 1; i++)
         {
             CeldaMemoria celdaActual = areasLibres.get(i);
             CeldaMemoria celdaSiguiente = areasLibres.get(i + 1);
 
+            //Si las dos celdas de memoria están disponibles, procede a unirlas.
             if (celdaActual.isDisponible() && celdaSiguiente.isDisponible())
             {
                 unirCeldas(celdaActual, celdaSiguiente);
@@ -40,6 +42,9 @@ public class MemoryHandler
         }
     }
 
+    /**
+     * Une dos {@link CeldaMemoria} que estén contiguas en la {@link RAM}.
+     */
     private CeldaMemoria unirCeldas(CeldaMemoria celda1, CeldaMemoria celda2)
     {
         if (celda2.getInicio() < celda1.getInicio())
@@ -50,9 +55,20 @@ public class MemoryHandler
         return celda1;
     }
 
-    private void ordenarMemoria(ArrayList<CeldaMemoria> aresLibres)
+    /**
+     * Ordena las {@link CeldaMemoria} de la {@link RAM} de acuerdo a su posición en la memoria.
+     */
+    private void ordenarMemoria()
     {
-        aresLibres.sort(Comparator.comparing(CeldaMemoria::getInicio));
+        ram.getAreasLibres().sort(Comparator.comparing(CeldaMemoria::getInicio));
+    }
+
+    @Override
+    public void notificar(String mensaje)
+    {
+        setChanged();
+        notifyObservers(mensaje);
+        clearChanged();
     }
 
 }
