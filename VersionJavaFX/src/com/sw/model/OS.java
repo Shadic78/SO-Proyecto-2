@@ -36,7 +36,7 @@ public class OS extends Observable implements Observer, Notificador
     }
 
     /**
-     * Siguiente momento para este sistema operativo.
+     * Siguiente momento para este {@link OS}.
      */
     public void siguienteMomento()
     {
