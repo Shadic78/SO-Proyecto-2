@@ -2,7 +2,7 @@ package com.sw.model;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 @FunctionalInterface
 public interface Volatil

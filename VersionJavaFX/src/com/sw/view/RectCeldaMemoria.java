@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 public class RectCeldaMemoria extends Rectangle
 {

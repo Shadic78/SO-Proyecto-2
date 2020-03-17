@@ -4,28 +4,28 @@ package com.sw.model;
  *
  * @author Equipo 1
  */
-public class CeldaMemoria
+public abstract class CeldaMemoria
 {
 
-    private boolean fragmentado;
+    private int posicion;
     private int inicio;
     private int size;
 
     public CeldaMemoria()
     {
-        this(false, 0, 0);
+        this(1, 0, 0);
     }
 
     public CeldaMemoria(int inicio, int size)
     {
-        this(false, inicio, size);
+        this(1, inicio, size);
     }
 
-    public CeldaMemoria(boolean fragmentado, int inicio, int size)
+    public CeldaMemoria(int posicion, int inicio, int size)
     {
-        this.fragmentado = fragmentado;
         this.inicio = inicio;
         this.size = size;
+        this.posicion = posicion;
     }
 
     public int getInicio()
@@ -48,14 +48,14 @@ public class CeldaMemoria
         this.size = size;
     }
 
-    public boolean isFragmentado()
+    public int getPosicion()
     {
-        return fragmentado;
+        return posicion;
     }
 
-    public void setFragmentado(boolean fragmentado)
+    public void setPosicion(int posicion)
     {
-        this.fragmentado = fragmentado;
+        this.posicion = posicion;
     }
 
     public void ocupar(int size)
@@ -72,7 +72,7 @@ public class CeldaMemoria
     @Override
     public String toString()
     {
-        return "CeldaMemoria{" + "fragmentado=" + fragmentado + ", inicio=" + inicio + ", size=" + size + '}';
+        return "CeldaMemoria{" + "inicio=" + inicio + ", size=" + size + '}';
     }
 
 }

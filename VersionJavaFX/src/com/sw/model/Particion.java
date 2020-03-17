@@ -2,31 +2,21 @@ package com.sw.model;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 public class Particion extends CeldaMemoria
 {
 
     private Proceso proceso;
 
-    public Particion(Proceso proceso)
-    {
-        this(proceso, false, 0, 0);
-    }
-
-    public Particion(Proceso proceso, int size)
-    {
-        this(proceso, false, 0, size);
-    }
-
     public Particion(Proceso proceso, int inicio, int size)
     {
-        this(proceso, false, inicio, size);
+        this(proceso, 1, inicio, size);
     }
 
-    public Particion(Proceso proceso, boolean fragmentado, int inicio, int size)
+    public Particion(Proceso proceso, int posicion, int inicio, int size)
     {
-        super(fragmentado, inicio, size);
+        super(posicion, inicio, size);
         this.proceso = proceso;
     }
 

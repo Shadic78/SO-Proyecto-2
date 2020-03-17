@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 @OSVersion(version = "Windows 10")
 public class OS extends Observable implements Observer, Notificador
@@ -65,6 +65,7 @@ public class OS extends Observable implements Observer, Notificador
             notificar("El programa ha terminado");
 
         memoryHandler.compactarMemoria();
+        memoryHandler.revisarFragmentacion();
     }
 
     public int MEMORIA_OS()

@@ -10,7 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 public class TableManager
 {
@@ -50,7 +50,7 @@ public class TableManager
             switch (i)
             {
                 case 0:
-                    c.setCellValueFactory(cellData -> new SimpleStringProperty("1"));
+                    c.setCellValueFactory(new PropertyValueFactory("posicion"));
                     break;
                 case 1:
                     c.setCellValueFactory(cellData -> new SimpleStringProperty(((AreaLibre) (((TableColumn.CellDataFeatures) cellData).getValue())).getInicio() + " K"));
@@ -76,7 +76,7 @@ public class TableManager
             switch (i)
             {
                 case 0:
-                    c.setCellValueFactory(cellData -> new SimpleStringProperty("1"));
+                    c.setCellValueFactory(new PropertyValueFactory("posicion"));
                     break;
                 case 1:
                     c.setCellValueFactory(cellData -> new SimpleStringProperty(((Particion) (((TableColumn.CellDataFeatures) cellData).getValue())).getInicio() + " K"));

@@ -10,7 +10,7 @@ import javax.swing.text.html.StyleSheet;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 public class StageFactory
 {

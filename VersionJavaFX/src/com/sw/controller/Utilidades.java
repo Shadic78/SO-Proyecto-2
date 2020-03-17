@@ -5,7 +5,7 @@ import javafx.scene.text.Font;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 public class Utilidades
 {

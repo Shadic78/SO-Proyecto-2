@@ -4,6 +4,7 @@ import static com.sw.controller.Utilidades.getFontHeight;
 import static com.sw.controller.Utilidades.getFontWidth;
 import com.sw.model.AreaLibre;
 import com.sw.model.CeldaMemoria;
+import com.sw.model.Fragmento;
 import com.sw.model.OS;
 import com.sw.model.Particion;
 import com.sw.model.RAM;
@@ -24,13 +25,14 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 public class Grafico
 {
 
     private final Color BACKGROUND_COLOR = Color.rgb(244, 244, 244);
-    private final int WIDTH_LATERAL = 30;
+    private final int WIDTH_LATERAL_IZQUIERDO = 30;
+    private final int WIDTH_LATERAL_DERECHO = 30;
 
     private final int MAX_MEMORIA_RAM;
     private final int TAMANIO_MEMORIA_OS;
@@ -50,12 +52,14 @@ public class Grafico
      * @param areasLibres El {@link ObservableList} que representa las {@link AreaLibre}.
      * @param particiones El {@link ObservableList} que representa las {@link Particion}.
      */
-    public void dibujarRepresentacionGrafica(ObservableList<AreaLibre> areasLibres, ObservableList<Particion> particiones)
+    public void dibujarRepresentacionGrafica(ObservableList<AreaLibre> areasLibres, ObservableList<Particion> particiones, ObservableList<Fragmento> fragmentos)
     {
         createOSBlock();
         areasLibres.forEach(this::dibujarAreaLibre);
+        dibujarFragmentos(fragmentos);
         particiones.forEach(this::dibujarParticion);
-        createLateral();
+        createLateralIzquierdo();
+        createLateralDerecho();
         traerAlFrenteTodasLasEtiquetas();
         traerAlFrenteTodasLasEtiquetas();
     }
@@ -81,7 +85,7 @@ public class Grafico
      */
     private void dibujarAreaLibre(AreaLibre areaLibre)
     {
-        RectCeldaMemoria rectAreaLibre = createRectCeldaMemoria(areaLibre, Color.rgb(131, 157, 165));
+        RectCeldaMemoria rectAreaLibre = createRectCeldaMemoria("Área libre", areaLibre, Color.rgb(131, 157, 165));
 
         rectAreaLibre.heightProperty().bind(new Escalador(rectAreaLibre).getScaleHeightProperty());
         rectAreaLibre.yProperty().bind(new Reposicionador(rectAreaLibre).getPosicionHeightProperty());
@@ -96,12 +100,33 @@ public class Grafico
      */
     private void dibujarParticion(Particion particion)
     {
-        RectCeldaMemoria rectParticion = createRectCeldaMemoria(particion, Color.rgb(232, 232, 232));
+        RectCeldaMemoria rectParticion = createRectCeldaMemoria(particion.getProceso().getNombre(), particion, Color.rgb(232, 232, 232));
 
         rectParticion.heightProperty().bind(new Escalador(rectParticion).getScaleHeightProperty());
         rectParticion.yProperty().bind(new Reposicionador(rectParticion).getPosicionHeightProperty());
 
         panel.getChildren().addAll(rectParticion, rectParticion.getNombreLabel(), rectParticion.getPosicionTerminaLabel(), rectParticion.getTamanioLinea(), rectParticion.getTamanioLabel());
+    }
+
+    private void dibujarFragmentos(ObservableList<Fragmento> fragmentos)
+    {
+        for (Fragmento fragmento : fragmentos)
+        {
+            RectCeldaMemoria rectParticion = createRectCeldaMemoria("", fragmento, Color.rgb(221, 79, 67));
+
+            rectParticion.heightProperty().bind(new Escalador(rectParticion).getScaleHeightProperty());
+            rectParticion.yProperty().bind(new Reposicionador(rectParticion).getPosicionHeightProperty());
+            panel.getChildren().addAll(rectParticion, rectParticion.getNombreLabel(), rectParticion.getPosicionTerminaLabel(), rectParticion.getTamanioLinea(), rectParticion.getTamanioLabel());
+        }
+
+        if (fragmentos.size() > 1)
+        {
+            Label label = new Label("Fragmentación");
+            label.setRotate(90);
+            label.setId("fragmentacionLabel");
+            panel.getChildren().add(label);
+        }
+
     }
 
     /**
@@ -160,9 +185,9 @@ public class Grafico
      *
      * @return El {@link Rectangle} que representa esta {@link CeldaMemoria}.
      */
-    private RectCeldaMemoria createRectCeldaMemoria(CeldaMemoria celdaMemoria, Paint fill)
+    private RectCeldaMemoria createRectCeldaMemoria(String label, CeldaMemoria celdaMemoria, Paint fill)
     {
-        return createRectCeldaMemoria(celdaMemoria instanceof Particion ? ((Particion) celdaMemoria).getProceso().getNombre() : "Área libre",
+        return createRectCeldaMemoria(label,
                 celdaMemoria.getInicio(),
                 celdaMemoria.getSize(), 0,
                 obtenerPosicionEnGrafica(celdaMemoria.getInicio()),
@@ -173,15 +198,26 @@ public class Grafico
     /**
      * Crea el lateral donde se muestra el tamaño de cada {@link CeldaMemoria}.
      */
-    private void createLateral()
+    private void createLateralIzquierdo()
     {
-        Rectangle lateral = new Rectangle(0, 0, WIDTH_LATERAL, panel.getHeight());
+        Rectangle lateral = new Rectangle(0, 0, WIDTH_LATERAL_IZQUIERDO, panel.getHeight());
         lateral.setFill(BACKGROUND_COLOR);
         lateral.heightProperty().bind(panel.heightProperty());
         Label inicio = new Label("0K");
-        inicio.setTranslateX(WIDTH_LATERAL - getFontWidth(inicio.getText(), inicio.getFont()) - 4);
+        inicio.setTranslateX(WIDTH_LATERAL_IZQUIERDO - getFontWidth(inicio.getText(), inicio.getFont()) - 4);
         inicio.setTranslateY(-(getFontHeight(inicio.getFont()) / 2) - 2);
         panel.getChildren().addAll(lateral, inicio);
+    }
+
+    /**
+     * Crea el lateral donde se muestra el tamaño de cada {@link CeldaMemoria}.
+     */
+    private void createLateralDerecho()
+    {
+        Rectangle lateral = new Rectangle(panel.getWidth() - WIDTH_LATERAL_DERECHO, 0, WIDTH_LATERAL_DERECHO, panel.getHeight());
+        lateral.setFill(BACKGROUND_COLOR);
+        lateral.heightProperty().bind(panel.heightProperty());
+        panel.getChildren().add(lateral);
     }
 
     /**
@@ -209,7 +245,7 @@ public class Grafico
     }
 
     /**
-     * Vuelve a dibujar el gráfico.
+     * Elimina todos los nodos correspodientes a este {@link Pane}.
      */
     public void refrescarGrafico()
     {
@@ -288,21 +324,29 @@ public class Grafico
             Label tamanioLabel = rectCeldaMemoriaAReposicionar.getTamanioLabel();
             Line tamanioLinea = rectCeldaMemoriaAReposicionar.getTamanioLinea();
 
+            Label label = (Label) panel.lookup("#fragmentacionLabel");
+
+            if (label != null)
+            {
+                label.setTranslateX(panel.getWidth() - getFontWidth(label.getText(), label.getFont()) / 2 - getFontHeight(label.getFont()) / 2);
+                label.setTranslateY((panel.getHeight() - getFontHeight(label.getFont())) / 2);
+            }
+
             /**
-             * La línea estética para representar el tamaño de esta celda de memoria.
+             * La línea estética para representar el tamaño de cada celda de memoria.
              */
-            tamanioLinea.setStartX(panel.getWidth() - 5);
+            tamanioLinea.setStartX(panel.getWidth() - 5 - WIDTH_LATERAL_DERECHO);
             tamanioLinea.setStartY(posicionEnGrafica + 5);
-            tamanioLinea.setEndX(panel.getWidth() - 5);
+            tamanioLinea.setEndX(panel.getWidth() - 5 - WIDTH_LATERAL_DERECHO);
             tamanioLinea.setEndY(posicionEnGrafica + rectCeldaMemoriaAReposicionar.getHeight() - 5);
 
             tamanioLabel.setTranslateX(tamanioLinea.getStartX() - getFontWidth(tamanioLabel.getText(), tamanioLabel.getFont()) - 3);
             tamanioLabel.setTranslateY(posicionEnGrafica + tamanioEnGrafica / 2 - getFontHeight(tamanioLabel.getFont()) / 2);
 
-            posicionTerminaLabel.setTranslateX(WIDTH_LATERAL - getFontWidth(posicionTerminaLabel.getText(), posicionTerminaLabel.getFont()));
+            posicionTerminaLabel.setTranslateX(WIDTH_LATERAL_IZQUIERDO - getFontWidth(posicionTerminaLabel.getText(), posicionTerminaLabel.getFont()));
             posicionTerminaLabel.setTranslateY(posicionEnGrafica + tamanioEnGrafica - getFontHeight(posicionTerminaLabel.getFont()) / 2);
 
-            nombreLabel.setTranslateX((panel.getWidth() - getFontWidth(nombreLabel.getText(), nombreLabel.getFont()) + WIDTH_LATERAL) / 2);
+            nombreLabel.setTranslateX((panel.getWidth() - getFontWidth(nombreLabel.getText(), nombreLabel.getFont()) + WIDTH_LATERAL_IZQUIERDO - WIDTH_LATERAL_DERECHO) / 2);
             nombreLabel.setTranslateY(posicionEnGrafica + tamanioEnGrafica / 2 - getFontHeight(nombreLabel.getFont()) / 2);
         }
 

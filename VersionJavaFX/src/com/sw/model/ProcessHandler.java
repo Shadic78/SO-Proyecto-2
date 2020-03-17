@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 public class ProcessHandler extends Observable implements Notificador
 {
@@ -117,7 +117,7 @@ public class ProcessHandler extends Observable implements Notificador
     /**
      * Elimina la {@link Particion} especificada de la memoria {@link RAM}.
      *
-     * @param celdaMemoria La {@link Particion} ha ser removida.
+     * @param indiceParticion El índice de la {@link Particion} ha ser removida.
      */
     public void retirarProcesoEnMemoria(int indiceParticion)
     {
@@ -133,6 +133,7 @@ public class ProcessHandler extends Observable implements Notificador
     {
         ram.anadirAreaLibre(new AreaLibre(particion));
         ram.eliminarParticion(particion);
+        notificar("Se retiró: " + particion.getProceso().getNombre());
     }
 
     /**
@@ -166,7 +167,7 @@ public class ProcessHandler extends Observable implements Notificador
         ObservableList<Particion> particiones = ram.getParticiones();
 
         // Encontrar el proceso con la llegada + duración más corta.
-        Particion celdaARetirar = particiones.get(0);
+        Particion particionARetirar = particiones.get(0);
         Proceso proceso = particiones.get(0).getProceso();
         int menorTiempoFinalizacion = proceso.getLlegada() + proceso.getDuracion();
 
@@ -178,12 +179,12 @@ public class ProcessHandler extends Observable implements Notificador
             if (tiempoFinalizacion < menorTiempoFinalizacion)
             {
                 menorTiempoFinalizacion = tiempoFinalizacion;
-                celdaARetirar = particiones.get(i);
+                particionARetirar = particiones.get(i);
             }
         }
 
-        retirarProcesoEnMemoria(celdaARetirar);
-        notificar("Se retiró: " + celdaARetirar.getProceso().getNombre());
+        retirarProcesoEnMemoria(particionARetirar);
+        notificar("Se retiró: " + particionARetirar.getProceso().getNombre());
     }
 
     @Override

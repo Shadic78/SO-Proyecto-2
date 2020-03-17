@@ -2,7 +2,7 @@ package com.sw.model;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 public class AreaLibre extends CeldaMemoria
 {
@@ -14,12 +14,7 @@ public class AreaLibre extends CeldaMemoria
 
     public AreaLibre(int inicio, int size)
     {
-        this(false, inicio, size);
-    }
-
-    public AreaLibre(boolean fragmentado, int inicio, int size)
-    {
-        super(fragmentado, inicio, size);
+        super(inicio, size);
     }
 
 }

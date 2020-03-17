@@ -2,7 +2,7 @@ package com.sw.controller;
 
 /**
  *
- * @author HikingCarrot7
+ * @author SonBear
  */
 @FunctionalInterface
 public interface Controller<E>
