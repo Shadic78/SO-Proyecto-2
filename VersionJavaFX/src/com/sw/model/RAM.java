@@ -11,13 +11,17 @@ import javafx.collections.ObservableList;
 public class RAM implements RandomAccess, Volatil
 {
 
+    private final int MAX_TAM_MEMORIA;
+
     private final ObservableList<AreaLibre> areasLibres;
     private final ObservableList<Particion> particiones;
 
-    public RAM()
+    public RAM(final int MAX_TAM_MEMORIA)
     {
         areasLibres = FXCollections.observableArrayList();
         particiones = FXCollections.observableArrayList();
+
+        this.MAX_TAM_MEMORIA = MAX_TAM_MEMORIA;
     }
 
     public void anadirAreaLibre(AreaLibre areaLibre)
@@ -68,6 +72,11 @@ public class RAM implements RandomAccess, Volatil
     public ObservableList<Particion> getParticiones()
     {
         return particiones;
+    }
+
+    public int MAX_TAM_MEMORIA()
+    {
+        return MAX_TAM_MEMORIA;
     }
 
     @Override

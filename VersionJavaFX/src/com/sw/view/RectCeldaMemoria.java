@@ -11,16 +11,18 @@ import javafx.scene.shape.Rectangle;
 public class RectCeldaMemoria extends Rectangle
 {
 
-    private Label etiqueta;
-    private int inicio;
-    private int tamanio;
+    private final Label etiqueta;
+    private final Label tamanioTexto;
+    private final int inicioMemoria;
+    private final int tamanioMemoria;
 
-    public RectCeldaMemoria(String etiqueta, int inicio, int tamanio, double x, double y, double width, double height, Paint fill)
+    public RectCeldaMemoria(String etiqueta, int inicioMemoria, int tamanioMemoria, double x, double y, double width, double height, Paint fill)
     {
         super(x, y, width, height);
         this.etiqueta = new Label(etiqueta);
-        this.inicio = inicio;
-        this.tamanio = tamanio;
+        this.tamanioTexto = new Label((tamanioMemoria + inicioMemoria) + "K");
+        this.inicioMemoria = inicioMemoria;
+        this.tamanioMemoria = tamanioMemoria;
         setFill(fill);
     }
 
@@ -29,29 +31,19 @@ public class RectCeldaMemoria extends Rectangle
         return etiqueta;
     }
 
-    public void setEtiqueta(Label etiqueta)
+    public Label getTamanioTexto()
     {
-        this.etiqueta = etiqueta;
+        return tamanioTexto;
     }
 
     public int getInicioMemoria()
     {
-        return inicio;
-    }
-
-    public void setInicio(int inicio)
-    {
-        this.inicio = inicio;
+        return inicioMemoria;
     }
 
     public int getTamanioMemoria()
     {
-        return tamanio;
-    }
-
-    public void setTamanio(int tamanio)
-    {
-        this.tamanio = tamanio;
+        return tamanioMemoria;
     }
 
 }

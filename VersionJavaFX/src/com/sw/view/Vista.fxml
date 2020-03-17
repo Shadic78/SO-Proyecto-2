@@ -30,7 +30,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                     <VBox.margin>
-                        <Insets left="50.0" right="50.0" />
+                        <Insets left="100.0" right="100.0" />
                     </VBox.margin>
                 </TableView>
             </children>
@@ -118,6 +118,9 @@
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
               </Button>
             <Label fx:id="estado" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
                <font>

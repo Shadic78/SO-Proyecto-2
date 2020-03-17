@@ -3,6 +3,7 @@ package com.sw.view;
 import com.sw.controller.Utilidades;
 import com.sw.model.AreaLibre;
 import com.sw.model.CeldaMemoria;
+import com.sw.model.OS;
 import com.sw.model.Particion;
 import com.sw.model.RAM;
 import javafx.beans.property.DoubleProperty;
@@ -10,6 +11,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -24,6 +26,9 @@ import javafx.stage.Stage;
  */
 public class Grafico
 {
+
+    private final Color BACKGROUND_COLOR = Color.rgb(244, 244, 244);
+    private final int WIDTH_LATERAL = 30;
 
     private final int MAX_MEMORIA_RAM;
     private final int TAMANIO_MEMORIA_OS;
@@ -48,7 +53,16 @@ public class Grafico
         createOSBlock();
         areasLibres.forEach(this::dibujarAreaLibre);
         particiones.forEach(this::dibujarParticion);
+        createLateral();
+        traerAlFrenteTodasLasEtiquetas();
+        traerAlFrenteTodasLasEtiquetas();
+    }
 
+    /**
+     * Trae al frente todas las {@link Label} de las {@link CeldaMemoria}.
+     */
+    private void traerAlFrenteTodasLasEtiquetas()
+    {
         for (int i = 0; i < panel.getChildren().size(); i++)
         {
             Node n = panel.getChildren().get(i);
@@ -56,9 +70,13 @@ public class Grafico
             if (n instanceof Label)
                 n.toFront();
         }
-
     }
 
+    /**
+     * Dibuja las {@link AreaLibre} contenidas en la {@link ObservableList} especificada.
+     *
+     * @param areaLibre La {@link ObservableList} de las {@link AreaLibre} ha dibujar.
+     */
     private void dibujarAreaLibre(AreaLibre areaLibre)
     {
         RectCeldaMemoria rectAreaLibre = createRectCeldaMemoria(areaLibre, Color.rgb(131, 157, 165));
@@ -66,9 +84,14 @@ public class Grafico
         rectAreaLibre.heightProperty().bind(new Escalador(rectAreaLibre).getScaleHeightProperty());
         rectAreaLibre.yProperty().bind(new Reposicionador(rectAreaLibre).getPosicionHeightProperty());
 
-        panel.getChildren().addAll(rectAreaLibre, rectAreaLibre.getEtiqueta());
+        panel.getChildren().addAll(rectAreaLibre, rectAreaLibre.getEtiqueta(), rectAreaLibre.getTamanioTexto());
     }
 
+    /**
+     * Dibuja las {@link Particion} contenidas en la {@link ObservableList} especificada.
+     *
+     * @param particion La {@link ObservableList} de las {@link Particion} ha dibujar.
+     */
     private void dibujarParticion(Particion particion)
     {
         RectCeldaMemoria rectParticion = createRectCeldaMemoria(particion, Color.rgb(232, 232, 232));
@@ -76,15 +99,18 @@ public class Grafico
         rectParticion.heightProperty().bind(new Escalador(rectParticion).getScaleHeightProperty());
         rectParticion.yProperty().bind(new Reposicionador(rectParticion).getPosicionHeightProperty());
 
-        panel.getChildren().addAll(rectParticion, rectParticion.getEtiqueta());
+        panel.getChildren().addAll(rectParticion, rectParticion.getEtiqueta(), rectParticion.getTamanioTexto());
     }
 
+    /**
+     * Crea el {@link Rectangle} que representa a nuestro {@link OS}.
+     */
     private void createOSBlock()
     {
         RectCeldaMemoria os = createRectCeldaMemoria("OS", 0, TAMANIO_MEMORIA_OS, 0, 0, panel.getWidth(), obtenerTamanioEnGrafica(TAMANIO_MEMORIA_OS), Color.rgb(0, 112, 192));
         os.heightProperty().bind(new Escalador(os).getScaleHeightProperty());
         os.yProperty().bind(new Reposicionador(os).getPosicionHeightProperty());
-        panel.getChildren().addAll(os, os.getEtiqueta());
+        panel.getChildren().addAll(os, os.getEtiqueta(), os.getTamanioTexto());
     }
 
     /**
@@ -107,6 +133,18 @@ public class Grafico
         rect.widthProperty().bind(panel.widthProperty());
         rect.setStroke(Color.WHITE);
         rect.setStrokeWidth(2);
+
+        rect.setOnMouseEntered(e ->
+        {
+            rect.setFill(((Color) rect.getFill()).brighter());
+            rect.setCursor(Cursor.HAND);
+        });
+
+        rect.setOnMouseExited(e ->
+        {
+            rect.setFill(fill);
+        });
+
         rect.toFront();
         return rect;
     }
@@ -126,6 +164,20 @@ public class Grafico
                 obtenerPosicionEnGrafica(celdaMemoria.getInicio()),
                 panel.getWidth(),
                 obtenerTamanioEnGrafica(celdaMemoria.getSize()), fill);
+    }
+
+    /**
+     * Crea el lateral donde se muestra el tamaño de cada {@link CeldaMemoria}.
+     */
+    private void createLateral()
+    {
+        Rectangle lateral = new Rectangle(0, 0, WIDTH_LATERAL, panel.getHeight());
+        lateral.setFill(BACKGROUND_COLOR);
+        lateral.heightProperty().bind(panel.heightProperty());
+        Label inicio = new Label("0K");
+        inicio.setTranslateX(WIDTH_LATERAL - Utilidades.getFontWidth(inicio.getText(), inicio.getFont()) - 4);
+        inicio.setTranslateY(-(Utilidades.getFontHeight(inicio.getFont()) / 2) - 2);
+        panel.getChildren().addAll(lateral, inicio);
     }
 
     /**
@@ -165,25 +217,29 @@ public class Grafico
      *
      * Podemos decir que los objetos de esta clase están a la escucha de los cambios de tamaño del panel donde se dibuja el gráfico (dichos cambios se dan cuando se cambia el tamaño de la ventana).
      */
-    private class Escalador
+    private class Escalador implements ChangeListener<Number>
     {
 
-        private DoubleProperty scaleHeightProperty;
+        private final DoubleProperty scaleHeightProperty;
+        private final RectCeldaMemoria rectCeldaMemoriaAEscalar;
 
         public Escalador(RectCeldaMemoria rectCeldaMemoriaAEscalar)
         {
+            this.rectCeldaMemoriaAEscalar = rectCeldaMemoriaAEscalar;
             scaleHeightProperty = new SimpleDoubleProperty(obtenerTamanioEnGrafica(rectCeldaMemoriaAEscalar.getTamanioMemoria()));
+            panel.heightProperty().addListener(this);
+        }
 
-            panel.heightProperty().addListener((observer, oldValue, newValue) ->
-            {
-                scaleHeightProperty.setValue(obtenerTamanioEnGrafica(rectCeldaMemoriaAEscalar.getTamanioMemoria()));
-            });
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+        {
+            scaleHeightProperty.setValue(obtenerTamanioEnGrafica(rectCeldaMemoriaAEscalar.getTamanioMemoria()));
         }
 
         /**
-         * Retorna el {@link DoubleProperty} de este escalador.
+         * Retorna el {@link DoubleProperty} de este {@link Escalador}.
          *
-         * @return El {@link DoubleProperty} de este escalador.
+         * @return El {@link DoubleProperty} de este {@link Escalador}.
          */
         public DoubleProperty getScaleHeightProperty()
         {
@@ -216,16 +272,28 @@ public class Grafico
             posicionHeightProperty.setValue(obtenerPosicionEnGrafica(rectCeldaMemoriaAReposicionar.getInicioMemoria()));
         }
 
+        /**
+         * Reposiciona a la {@link Label} contenida en esta {@link CeldaMemoria}.
+         */
         private void reposicionarEtiqueta()
         {
             double posicionEnGrafica = obtenerPosicionEnGrafica(rectCeldaMemoriaAReposicionar.getInicioMemoria());
             double tamanioEnGrafica = obtenerTamanioEnGrafica(rectCeldaMemoriaAReposicionar.getTamanioMemoria());
             Label etiqueta = rectCeldaMemoriaAReposicionar.getEtiqueta();
+            Label tamanioTexto = rectCeldaMemoriaAReposicionar.getTamanioTexto();
+
+            tamanioTexto.setTranslateX(WIDTH_LATERAL - Utilidades.getFontWidth(tamanioTexto.getText(), tamanioTexto.getFont()));
+            tamanioTexto.setTranslateY(posicionEnGrafica + tamanioEnGrafica - Utilidades.getFontHeight(tamanioTexto.getFont()) / 2);
 
             etiqueta.setTranslateY(posicionEnGrafica + tamanioEnGrafica / 2 - Utilidades.getFontHeight(etiqueta.getFont()) / 2);
-            etiqueta.setTranslateX(panel.getWidth() / 2 - Utilidades.getFontWidth(etiqueta.getText(), etiqueta.getFont()) / 2);
+            etiqueta.setTranslateX((panel.getWidth() - Utilidades.getFontWidth(etiqueta.getText(), etiqueta.getFont()) + WIDTH_LATERAL) / 2);
         }
 
+        /**
+         * Retorna el {@link DoubleProperty} de este {@link Reposicionador}.
+         *
+         * @return El {@link DoubleProperty} de este {@link Reposicionador}.
+         */
         public DoubleProperty getPosicionHeightProperty()
         {
             return posicionHeightProperty;

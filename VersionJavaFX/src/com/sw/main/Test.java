@@ -46,7 +46,7 @@ public class Test extends Application
         colaProcesos.add(p8);
         colaProcesos.add(p9);
 
-        StageFactory.createStage("/com/sw/view/Vista.fxml", "MVT", Modality.NONE, colaProcesos);
+        StageFactory.createStage("/com/sw/view/Vista.fxml", "MVT", "/com/sw/styles/Stylesheet.css", Modality.NONE, colaProcesos);
     }
 
 }

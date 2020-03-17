@@ -15,9 +15,11 @@ public class OS extends Observable implements Observer, Notificador
 
     private final MemoryHandler memoryHandler;
     private final ProcessHandler processHandler;
+    private final int MEMORIA_OS;
 
-    public OS(RAM ram, ObservableList<Proceso> colaProcesos)
+    public OS(final int MEMORIA_OS, RAM ram, ObservableList<Proceso> colaProcesos)
     {
+        this.MEMORIA_OS = MEMORIA_OS;
         memoryHandler = new MemoryHandler(ram);
         processHandler = new ProcessHandler(ram, FXCollections.observableArrayList(colaProcesos));
 
@@ -29,7 +31,7 @@ public class OS extends Observable implements Observer, Notificador
 
     private void iniciarOS(RAM ram)
     {
-        AreaLibre areaLibre = new AreaLibre(10, 54);
+        AreaLibre areaLibre = new AreaLibre(MEMORIA_OS, ram.MAX_TAM_MEMORIA() - MEMORIA_OS);
         ram.anadirAreaLibre(areaLibre);
     }
 
@@ -63,6 +65,11 @@ public class OS extends Observable implements Observer, Notificador
             notificar("El programa ha terminado");
 
         memoryHandler.compactarMemoria();
+    }
+
+    public int MEMORIA_OS()
+    {
+        return MEMORIA_OS;
     }
 
     @Override

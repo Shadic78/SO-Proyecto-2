@@ -15,7 +15,7 @@ import javax.swing.text.html.StyleSheet;
 public class StageFactory
 {
 
-    public static String RUTA_ESTILOS = "/com/sw/styles/Stylesheet.css";
+    public static final String RUTA_ESTILOS = "/com/sw/styles/Stylesheet.css";
 
     /**
      * Crea un {@link Stage}.

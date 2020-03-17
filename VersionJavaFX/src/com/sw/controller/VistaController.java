@@ -52,20 +52,20 @@ public class VistaController implements Initializable, Controller<ObservableList
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        ram = new RAM();
+        ram = new RAM(64);
         tableManager = new TableManager();
-        grafico = new Grafico(panel, 64, 10);
         initTablas();
     }
 
     @Override
     public void setDefaultData(ObservableList<Proceso> colaProcesos)
     {
-        os = new OS(ram, colaProcesos);
+        os = new OS(10, ram, colaProcesos);
         os.addObserver(this);
         tablaProcesos.setItems(colaProcesos);
         tablaAreasLibres.setItems(ram.getAreasLibres());
         tablaParticiones.setItems(ram.getParticiones());
+        grafico = new Grafico(panel, ram.MAX_TAM_MEMORIA(), os.MEMORIA_OS());
         actualizarGrafico();
     }
 
