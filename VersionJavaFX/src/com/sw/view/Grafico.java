@@ -30,7 +30,9 @@ import javafx.stage.Stage;
 public class Grafico
 {
 
-    private final Color BACKGROUND_COLOR = Color.rgb(244, 244, 244);
+    private final Color BACKGROUND_COLOR = Color.rgb(252, 252, 252);
+    private final Color STROKE_COLOR = Color.GAINSBORO;
+
     private final int WIDTH_LATERAL_IZQUIERDO = 30;
     private final int WIDTH_LATERAL_DERECHO = 30;
 
@@ -159,7 +161,7 @@ public class Grafico
     {
         RectCeldaMemoria rect = new RectCeldaMemoria(label, inicio, tamanio, x, y, width, height, fill);
         rect.widthProperty().bind(panel.widthProperty());
-        rect.setStroke(Color.WHITE);
+        rect.setStroke(STROKE_COLOR);
         rect.setStrokeWidth(2);
 
         rect.setOnMouseEntered(e ->
