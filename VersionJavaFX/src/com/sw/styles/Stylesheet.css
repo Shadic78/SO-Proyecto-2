@@ -3,6 +3,7 @@
     Author     : SonBear
 */
 
+
 /*-----------------------------------TODOS LOS CONTROLES-----------------------------------*/
 
 .root {
@@ -13,14 +14,17 @@
     -fx-background-color: rgb(252, 252, 252);
 }
 
+
 /*-----------------------------------BOTONES-----------------------------------*/
-.button{
+
+.button {
     -fx-background-color: orange;
 }
 
-.button:hover{
+.button:hover {
     -fx-background-color: rgb(252, 178, 21);
 }
+
 
 /*--------BOTONES GENÉRICOS--------*/
 
@@ -59,6 +63,7 @@
         linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);*/
 }
 
+
 /*.button
 {
     -fx-background-color : #FFF;
@@ -92,6 +97,7 @@
     -fx-text-fill: #FFF;
 }
 
+
 /*--------BOTONES PARA CANCELAR / ELIMINAR--------*/
 
 .button-eliminar {
@@ -109,12 +115,14 @@
     -fx-text-fill: white;
 }
 
+
 /*-----------------------------------TOOLTIP-----------------------------------*/
 
 .tooltip {
     -fx-background-color: #BCBCBC;
     -fx-text-fill: black;
 }
+
 
 /*-----------------------------------COMBOBOX-----------------------------------*/
 
@@ -134,12 +142,12 @@
 
 .combo-box-popup .list-view .list-cell {
     -fx-padding: 4 0 4 5;
-
     /* No alternate highlighting */
     -fx-background-color: white;
 }
 
-.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover {
+.combo-box-popup .list-view .list-cell:filled:selected,
+.combo-box-popup .list-view .list-cell:filled:selected:hover {
     -fx-background: black;
     -fx-background-color: -fx-selection-bar;
     -fx-text-fill: -fx-selection-bar-text;
@@ -176,6 +184,7 @@
     -fx-opacity: .4;
 }
 
+
 /*-----------------------------------LABELS-----------------------------------*/
 
 .label-month-title {
@@ -186,6 +195,7 @@
     -fx-font-size: 1.2em;
     -fx-background-radius: 5px 5px 0px 0px;
 }
+
 
 /*-----------------------------------TABLAS-----------------------------------*/
 
