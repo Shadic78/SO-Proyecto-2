@@ -3,6 +3,7 @@ package com.sw.model;
 import java.util.Observable;
 import java.util.Observer;
 import javafx.collections.FXCollections;
+import static javafx.collections.FXCollections.observableArrayList;
 import javafx.collections.ObservableList;
 
 /**
@@ -21,7 +22,7 @@ public class OS extends Observable implements Observer, Notificador
     {
         this.MEMORIA_OS = MEMORIA_OS;
         memoryHandler = new MemoryHandler(ram);
-        processHandler = new ProcessHandler(ram, FXCollections.observableArrayList(colaProcesos));
+        processHandler = new ProcessHandler(ram, observableArrayList(colaProcesos));
 
         memoryHandler.addObserver(this);
         processHandler.addObserver(this);

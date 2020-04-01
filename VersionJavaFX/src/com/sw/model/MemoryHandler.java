@@ -1,8 +1,10 @@
 package com.sw.model;
 
 import java.util.Comparator;
+import static java.util.Comparator.comparing;
 import java.util.Observable;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toCollection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -76,16 +78,14 @@ public class MemoryHandler extends Observable implements Notificador
     /**
      * <strong><h1>Primero debe compactarse la memoria para hacer uso de este método</h1></strong>.
      *
-     * @param areasLibres Las {@link AreaLibre} ha ser revisadas.
      * @see #compactarMemoria()
-     * @return La {@link ObservableList} de {@link Fragmento} que se hayan generado por las {@link AreaLibre}.
      */
     public void revisarFragmentacion()
     {
         ram.getFragmentos().clear();
 
         if (ram.getAreasLibres().size() > 1)
-            ram.setFragmentos(ram.getAreasLibres().stream().map(Fragmento::new).collect(Collectors.toCollection(FXCollections::observableArrayList)));
+            ram.setFragmentos(ram.getAreasLibres().stream().map(Fragmento::new).collect(toCollection(FXCollections::observableArrayList)));
     }
 
     /**
@@ -93,7 +93,7 @@ public class MemoryHandler extends Observable implements Notificador
      */
     private void ordenarMemoria()
     {
-        ram.getAreasLibres().sort(Comparator.comparing(CeldaMemoria::getInicio));
+        ram.getAreasLibres().sort(comparing(CeldaMemoria::getInicio));
     }
 
     @Override

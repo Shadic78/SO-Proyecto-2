@@ -10,16 +10,18 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
+import static javafx.application.Platform.runLater;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
+import static javafx.scene.Cursor.HAND;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -38,6 +40,8 @@ public class VistaController implements Initializable, Observer, Controller<Obse
     @FXML
     private Button btnSigPaso;
     @FXML
+    private Button btnAdmProcesos;
+    @FXML
     private Pane panel;
     @FXML
     private Label estado;
@@ -46,16 +50,21 @@ public class VistaController implements Initializable, Observer, Controller<Obse
     private RAM ram;
     private TableManager tableManager;
     private Grafico grafico;
+    private Stage myStage;
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
         ram = new RAM(64);
-        tableManager = new TableManager();
-        btnSigPaso.setCursor(Cursor.HAND);
+        tableManager = TableManager.getInstance();
+        btnSigPaso.setWrapText(true);
+        btnSigPaso.setCursor(HAND);
         initTablas();
     }
 
@@ -71,34 +80,17 @@ public class VistaController implements Initializable, Observer, Controller<Obse
         actualizarGrafico();
     }
 
+    @Override
+    public void initStage(Stage s)
+    {
+        myStage = s;
+    }
+
     private void initTablas()
     {
         tableManager.inicializarTablaProcesos(tablaProcesos);
         tableManager.inicializarTablaAreasLibres(tablaAreasLibres);
         tableManager.inicializarTablaParticiones(tablaParticiones);
-    }
-
-    private void actualizarGrafico()
-    {
-        Platform.runLater(() ->
-        {
-            grafico.refrescarGrafico();
-            grafico.dibujarRepresentacionGrafica(ram.getAreasLibres(), ram.getParticiones(), ram.getFragmentos());
-        });
-    }
-
-    @Override
-    public void update(Observable o, Object arg)
-    {
-        actualizarEstado(arg.toString());
-    }
-
-    private void actualizarEstado(String mensaje)
-    {
-        Platform.runLater(() ->
-        {
-            estado.setText(mensaje);
-        });
     }
 
     @FXML
@@ -107,6 +99,40 @@ public class VistaController implements Initializable, Observer, Controller<Obse
         os.siguienteMomento();
         actualizarGrafico();
         actualizarTablas();
+    }
+
+    @FXML
+    private void admProcesos(ActionEvent e)
+    {
+        StageFactory.createStage("/com/sw/view/AdmProcesos.fxml",
+                "Administrador de procesos",
+                StageFactory.RUTA_ESTILOS,
+                Modality.APPLICATION_MODAL,
+                myStage,
+                tablaProcesos.getItems());
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        actualizarEstado(arg.toString());
+    }
+
+    private void actualizarGrafico()
+    {
+        runLater(() ->
+        {
+            grafico.refrescarGrafico();
+            grafico.dibujarRepresentacionGrafica(ram.getAreasLibres(), ram.getParticiones(), ram.getFragmentos());
+        });
+    }
+
+    private void actualizarEstado(String mensaje)
+    {
+        runLater(() ->
+        {
+            estado.setText(mensaje);
+        });
     }
 
     private void actualizarTablas()

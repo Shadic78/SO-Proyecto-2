@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javax.swing.text.html.StyleSheet;
 
 /**
@@ -22,13 +23,15 @@ public class StageFactory
      *
      * @param ruta La ruta del FXML del nuevo {@link Stage}
      * @param title El título para este {@link Stage}.
+     * @param stylesheet La ruta del {@link StyleSheet} para esta {@link Stage}.
      * @param modality El {@link Modality} para este {@link Stage}.
+     * @param defaultData
      *
      * @return Una referencia al controlador de este nuevo {@link Stage}.
      */
-    public static Controller createStage(String ruta, String title, Modality modality, Object defaultData)
+    public static Controller createStage(String ruta, String title, String stylesheet, Modality modality, Object defaultData)
     {
-        return createStage(ruta, title, RUTA_ESTILOS, modality, defaultData);
+        return createStage(ruta, title, stylesheet, modality, null, defaultData);
     }
 
     /**
@@ -38,10 +41,12 @@ public class StageFactory
      * @param title El título para este {@link Stage}.
      * @param modality El {@link Modality} para este {@link Stage}.
      * @param stylesheet La ruta del {@link StyleSheet} para esta {@link Stage}.
+     * @param owner
+     * @param defaultData
      *
      * @return Una referencia al controlador de este nuevo {@link Stage}.
      */
-    public static Controller createStage(String ruta, String title, String stylesheet, Modality modality, Object defaultData)
+    public static Controller createStage(String ruta, String title, String stylesheet, Modality modality, Window owner, Object defaultData)
     {
         try
         {
@@ -51,6 +56,8 @@ public class StageFactory
             Scene scene = new Scene(pane);
             Stage stage = new Stage();
             ((Controller) loader.getController()).setDefaultData(defaultData);
+            ((Controller) loader.getController()).initStage(stage);
+            stage.initOwner(owner);
             scene.getStylesheets().add(stylesheet);
             stage.setTitle(title);
             stage.initModality(modality);

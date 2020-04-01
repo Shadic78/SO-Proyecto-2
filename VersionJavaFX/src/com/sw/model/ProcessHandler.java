@@ -2,6 +2,7 @@ package com.sw.model;
 
 import java.util.Observable;
 import javafx.collections.FXCollections;
+import static javafx.collections.FXCollections.observableArrayList;
 import javafx.collections.ObservableList;
 
 /**
@@ -19,7 +20,7 @@ public class ProcessHandler extends Observable implements Notificador
     {
         this.ram = ram;
         this.colaProcesos = colaProcesos;
-        procesosEnEspera = FXCollections.observableArrayList();
+        procesosEnEspera = observableArrayList();
     }
 
     public boolean insertarProcesoEnMemoria()

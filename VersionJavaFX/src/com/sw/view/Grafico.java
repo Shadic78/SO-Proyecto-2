@@ -13,11 +13,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.scene.Cursor;
+import static javafx.scene.Cursor.HAND;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import static javafx.scene.paint.Color.GAINSBORO;
+import static javafx.scene.paint.Color.rgb;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -30,8 +32,8 @@ import javafx.stage.Stage;
 public class Grafico
 {
 
-    private final Color BACKGROUND_COLOR = Color.rgb(252, 252, 252);
-    private final Color STROKE_COLOR = Color.GAINSBORO;
+    private final Color BACKGROUND_COLOR = rgb(252, 252, 252);
+    private final Color STROKE_COLOR = GAINSBORO;
 
     private final int WIDTH_LATERAL_IZQUIERDO = 30;
     private final int WIDTH_LATERAL_DERECHO = 30;
@@ -53,6 +55,7 @@ public class Grafico
      *
      * @param areasLibres El {@link ObservableList} que representa las {@link AreaLibre}.
      * @param particiones El {@link ObservableList} que representa las {@link Particion}.
+     * @param fragmentos El {@link ObservableList} que representa las {@link Fragmento}.
      */
     public void dibujarRepresentacionGrafica(ObservableList<AreaLibre> areasLibres, ObservableList<Particion> particiones, ObservableList<Fragmento> fragmentos)
     {
@@ -87,12 +90,16 @@ public class Grafico
      */
     private void dibujarAreaLibre(AreaLibre areaLibre)
     {
-        RectCeldaMemoria rectAreaLibre = createRectCeldaMemoria("Área libre", areaLibre, Color.rgb(131, 157, 165));
+        RectCeldaMemoria rectAreaLibre = createRectCeldaMemoria("Área libre", areaLibre, rgb(131, 157, 165));
 
         rectAreaLibre.heightProperty().bind(new Escalador(rectAreaLibre).getScaleHeightProperty());
         rectAreaLibre.yProperty().bind(new Reposicionador(rectAreaLibre).getPosicionHeightProperty());
 
-        panel.getChildren().addAll(rectAreaLibre, rectAreaLibre.getNombreLabel(), rectAreaLibre.getPosicionTerminaLabel(), rectAreaLibre.getTamanioLinea(), rectAreaLibre.getTamanioLabel());
+        panel.getChildren().addAll(rectAreaLibre,
+                rectAreaLibre.getNombreLabel(),
+                rectAreaLibre.getPosicionTerminaLabel(),
+                rectAreaLibre.getTamanioLinea(),
+                rectAreaLibre.getTamanioLabel());
     }
 
     /**
@@ -102,23 +109,31 @@ public class Grafico
      */
     private void dibujarParticion(Particion particion)
     {
-        RectCeldaMemoria rectParticion = createRectCeldaMemoria(particion.getProceso().getNombre(), particion, Color.rgb(232, 232, 232));
+        RectCeldaMemoria rectParticion = createRectCeldaMemoria(particion.getProceso().getNombre(), particion, rgb(232, 232, 232));
 
         rectParticion.heightProperty().bind(new Escalador(rectParticion).getScaleHeightProperty());
         rectParticion.yProperty().bind(new Reposicionador(rectParticion).getPosicionHeightProperty());
 
-        panel.getChildren().addAll(rectParticion, rectParticion.getNombreLabel(), rectParticion.getPosicionTerminaLabel(), rectParticion.getTamanioLinea(), rectParticion.getTamanioLabel());
+        panel.getChildren().addAll(rectParticion,
+                rectParticion.getNombreLabel(),
+                rectParticion.getPosicionTerminaLabel(),
+                rectParticion.getTamanioLinea(),
+                rectParticion.getTamanioLabel());
     }
 
     private void dibujarFragmentos(ObservableList<Fragmento> fragmentos)
     {
         for (Fragmento fragmento : fragmentos)
         {
-            RectCeldaMemoria rectParticion = createRectCeldaMemoria("", fragmento, Color.rgb(221, 79, 67));
+            RectCeldaMemoria rectParticion = createRectCeldaMemoria("", fragmento, rgb(221, 79, 67));
 
             rectParticion.heightProperty().bind(new Escalador(rectParticion).getScaleHeightProperty());
             rectParticion.yProperty().bind(new Reposicionador(rectParticion).getPosicionHeightProperty());
-            panel.getChildren().addAll(rectParticion, rectParticion.getNombreLabel(), rectParticion.getPosicionTerminaLabel(), rectParticion.getTamanioLinea(), rectParticion.getTamanioLabel());
+            panel.getChildren().addAll(rectParticion,
+                    rectParticion.getNombreLabel(),
+                    rectParticion.getPosicionTerminaLabel(),
+                    rectParticion.getTamanioLinea(),
+                    rectParticion.getTamanioLabel());
         }
 
         if (fragmentos.size() > 1)
@@ -136,11 +151,15 @@ public class Grafico
      */
     private void createOSBlock()
     {
-        RectCeldaMemoria os = createRectCeldaMemoria("SO", 0, TAMANIO_MEMORIA_OS, 0, 0, panel.getWidth(), obtenerTamanioEnGrafica(TAMANIO_MEMORIA_OS), Color.rgb(0, 112, 192));
+        RectCeldaMemoria os = createRectCeldaMemoria("SO", 0, TAMANIO_MEMORIA_OS, 0, 0, panel.getWidth(), obtenerTamanioEnGrafica(TAMANIO_MEMORIA_OS), rgb(0, 112, 192));
         os.heightProperty().bind(new Escalador(os).getScaleHeightProperty());
         os.yProperty().bind(new Reposicionador(os).getPosicionHeightProperty());
         os.getNombreLabel().setStyle("-fx-font-family: 'Helvetica Neue';-fx-font-size: 1.5em;-fx-font-weight: bold;-fx-text-fill: white;");
-        panel.getChildren().addAll(os, os.getNombreLabel(), os.getPosicionTerminaLabel(), os.getTamanioLinea(), os.getTamanioLabel());
+        panel.getChildren().addAll(os,
+                os.getNombreLabel(),
+                os.getPosicionTerminaLabel(),
+                os.getTamanioLinea(),
+                os.getTamanioLabel());
     }
 
     /**
@@ -167,7 +186,7 @@ public class Grafico
         rect.setOnMouseEntered(e ->
         {
             rect.setFill(((Color) rect.getFill()).brighter());
-            rect.setCursor(Cursor.HAND);
+            rect.setCursor(HAND);
         });
 
         rect.setOnMouseExited(e ->

@@ -2,6 +2,7 @@ package com.sw.model;
 
 import java.util.RandomAccess;
 import javafx.collections.FXCollections;
+import static javafx.collections.FXCollections.observableArrayList;
 import javafx.collections.ObservableList;
 
 /**
@@ -19,9 +20,9 @@ public class RAM implements RandomAccess, Volatil
 
     public RAM(final int MAX_TAM_MEMORIA)
     {
-        areasLibres = FXCollections.observableArrayList();
-        particiones = FXCollections.observableArrayList();
-        fragmentos = FXCollections.observableArrayList();
+        areasLibres = observableArrayList();
+        particiones = observableArrayList();
+        fragmentos = observableArrayList();
 
         this.MAX_TAM_MEMORIA = MAX_TAM_MEMORIA;
     }

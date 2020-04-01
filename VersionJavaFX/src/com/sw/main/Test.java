@@ -1,10 +1,11 @@
 package com.sw.main;
 
 import com.sw.controller.StageFactory;
+import static com.sw.controller.StageFactory.createStage;
 import com.sw.model.Proceso;
 import java.io.IOException;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
+import static javafx.collections.FXCollections.observableArrayList;
 import javafx.collections.ObservableList;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,7 +25,7 @@ public class Test extends Application
     @Override
     public void start(Stage primaryStage) throws IOException
     {
-        ObservableList<Proceso> colaProcesos = FXCollections.observableArrayList();
+        ObservableList<Proceso> colaProcesos = observableArrayList();
 
         Proceso p1 = new Proceso("P1", 3, 2, 9);
         Proceso p2 = new Proceso("P2", 18, 2, 12);
@@ -46,7 +47,7 @@ public class Test extends Application
         colaProcesos.add(p8);
         colaProcesos.add(p9);
 
-        StageFactory.createStage("/com/sw/view/Vista.fxml", "MVT", "/com/sw/styles/Stylesheet.css", Modality.NONE, colaProcesos);
+        createStage("/com/sw/view/Vista.fxml", "MVT", StageFactory.RUTA_ESTILOS, Modality.NONE, colaProcesos);
     }
 
 }

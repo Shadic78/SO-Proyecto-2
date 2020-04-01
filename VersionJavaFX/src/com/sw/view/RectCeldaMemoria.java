@@ -23,8 +23,10 @@ public class RectCeldaMemoria extends Rectangle
     {
         super(x, y, width, height);
         this.nombreLabel = new Label(etiqueta);
+        this.nombreLabel.setMouseTransparent(true);
         this.posicionTerminaLabel = new Label((tamanioMemoria + inicioMemoria) + "K");
         this.tamanioLabel = new Label(tamanioMemoria + "K");
+        this.tamanioLabel.setMouseTransparent(true);
         this.tamanioLinea = new Line(x + width - 5, y + 5, x + width - 5, y + height - 5);
         this.inicioMemoria = inicioMemoria;
         this.tamanioMemoria = tamanioMemoria;

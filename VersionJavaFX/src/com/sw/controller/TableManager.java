@@ -15,6 +15,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class TableManager
 {
 
+    private static TableManager instance;
+
+    private TableManager()
+    {
+
+    }
+
     public void inicializarTablaProcesos(TableView<Proceso> tablaProcesos)
     {
         for (int i = 0; i < tablaProcesos.getColumns().size(); i++)
@@ -35,8 +42,6 @@ public class TableManager
                 case 3:
                     c.setCellValueFactory(new PropertyValueFactory("duracion"));
                     break;
-                default:
-                    throw new AssertionError();
             }
         }
     }
@@ -94,6 +99,14 @@ public class TableManager
                     throw new AssertionError();
             }
         }
+    }
+
+    public synchronized static TableManager getInstance()
+    {
+        if (instance == null)
+            instance = new TableManager();
+
+        return instance;
     }
 
 }
