@@ -25,8 +25,10 @@ public class ModeloTablas
 
             model.addRow(new String[]
             {
-                proceso.getNombre(), Integer.toString(proceso.getSize()),
-                Integer.toString(proceso.getLlegada()), Integer.toString(proceso.getDuracion())
+                proceso.getNombre(),
+                Integer.toString(proceso.getSize()),
+                Integer.toString(proceso.getLlegada()),
+                Integer.toString(proceso.getDuracion())
             });
         }
 

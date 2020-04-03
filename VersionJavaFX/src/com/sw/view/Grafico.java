@@ -242,7 +242,7 @@ public class Grafico
     }
 
     /**
-     * Regresa el tamaño (en píxeles) de una {@link CeldaMemoria} de acuerda a su tamaño en memoria.
+     * Regresa la altura (en píxeles) de una {@link CeldaMemoria} de acuerda a su tamaño en memoria.
      *
      * @param tamanioMemoria El tamaño en memoria para una {@link CeldaMemoria}.
      *
