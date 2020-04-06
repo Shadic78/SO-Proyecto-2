@@ -11,6 +11,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Window;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -97,7 +98,7 @@ public class AdmProcesos extends JDialog
         filler5 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
         jSeparator1 = new JSeparator();
         filler10 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
-        jLabel6 = new JLabel();
+        jPanel7 = new JPanel();
         jScrollPane1 = new JScrollPane();
         tablaProcesos = new JTable();
         filler6 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
@@ -226,9 +227,8 @@ public class AdmProcesos extends JDialog
         jPanel4.add(jSeparator1);
         jPanel4.add(filler10);
 
-        jLabel6.setText("Procesos");
-        jLabel6.setAlignmentX(0.5F);
-        jPanel4.add(jLabel6);
+        jPanel7.setBorder(BorderFactory.createTitledBorder("Procesos"));
+        jPanel7.setLayout(new BorderLayout());
 
         tablaProcesos.setModel(new DefaultTableModel(
             new Object [][]
@@ -242,7 +242,9 @@ public class AdmProcesos extends JDialog
         ));
         jScrollPane1.setViewportView(tablaProcesos);
 
-        jPanel4.add(jScrollPane1);
+        jPanel7.add(jScrollPane1, BorderLayout.CENTER);
+
+        jPanel4.add(jPanel7);
         jPanel4.add(filler6);
 
         getContentPane().add(jPanel4, BorderLayout.CENTER);
@@ -274,13 +276,13 @@ public class AdmProcesos extends JDialog
     private JLabel jLabel3;
     private JLabel jLabel4;
     private JLabel jLabel5;
-    private JLabel jLabel6;
     private JPanel jPanel1;
     private JPanel jPanel2;
     private JPanel jPanel3;
     private JPanel jPanel4;
     private JPanel jPanel5;
     private JPanel jPanel6;
+    private JPanel jPanel7;
     private JScrollPane jScrollPane1;
     private JSeparator jSeparator1;
     private JTextField jTextField1;

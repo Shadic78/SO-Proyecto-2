@@ -4,10 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -68,6 +70,7 @@ public class Vista extends JFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
     {
+        GridBagConstraints gridBagConstraints;
 
         jPanel1 = new JPanel();
         filler3 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
@@ -75,24 +78,30 @@ public class Vista extends JFrame
         estado = new JLabel();
         filler5 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
         jPanel3 = new JPanel();
-        jLabel2 = new JLabel();
+        jPanel6 = new JPanel();
         jScrollPane1 = new JScrollPane();
         tablaAreasLibres = new JTable();
-        filler1 = new Box.Filler(new Dimension(0, 20), new Dimension(0, 20), new Dimension(32767, 20));
-        jLabel3 = new JLabel();
+        filler6 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
+        jPanel7 = new JPanel();
         jScrollPane2 = new JScrollPane();
         tablaParticiones = new JTable();
         jPanel2 = new JPanel();
         filler4 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
         jLabel4 = new JLabel();
+        filler7 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(0, 10));
         jPanel4 = new JPanel();
+        jPanel10 = new JPanel();
         jScrollPane3 = new JScrollPane();
         tablaProcesos = new JTable();
+        jPanel8 = new JPanel();
+        jPanel11 = new JPanel();
+        filler1 = new Box.Filler(new Dimension(5, 0), new Dimension(5, 0), new Dimension(5, 32767));
         btnAdmProcesos = new JButton();
+        jPanel9 = new JPanel();
+        filler8 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
         jPanel5 = new JPanel();
         filler2 = new Box.Filler(new Dimension(15, 0), new Dimension(15, 0), new Dimension(15, 0));
         panelGrafico = new JPanel();
-        jLabel5 = new JLabel();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBackground(new Color(252, 252, 252));
@@ -118,6 +127,7 @@ public class Vista extends JFrame
         jPanel1.add(btnSigMomento);
 
         estado.setFont(new Font("Tahoma", 0, 14)); // NOI18N
+        estado.setText(" ");
         estado.setAlignmentX(0.5F);
         jPanel1.add(estado);
         jPanel1.add(filler5);
@@ -127,9 +137,9 @@ public class Vista extends JFrame
         jPanel3.setBackground(new Color(252, 252, 252));
         jPanel3.setLayout(new BoxLayout(jPanel3, BoxLayout.Y_AXIS));
 
-        jLabel2.setText("Tabla de áreas libres");
-        jLabel2.setAlignmentX(0.5F);
-        jPanel3.add(jLabel2);
+        jPanel6.setBackground(new Color(252, 252, 252));
+        jPanel6.setBorder(BorderFactory.createTitledBorder("Tabla de areás libres"));
+        jPanel6.setLayout(new BorderLayout());
 
         tablaAreasLibres.setBackground(new Color(252, 252, 252));
         tablaAreasLibres.setModel(new DefaultTableModel(
@@ -145,12 +155,14 @@ public class Vista extends JFrame
         tablaAreasLibres.setGridColor(new Color(237, 237, 237));
         jScrollPane1.setViewportView(tablaAreasLibres);
 
-        jPanel3.add(jScrollPane1);
-        jPanel3.add(filler1);
+        jPanel6.add(jScrollPane1, BorderLayout.CENTER);
 
-        jLabel3.setText("Tabla de particiones");
-        jLabel3.setAlignmentX(0.5F);
-        jPanel3.add(jLabel3);
+        jPanel3.add(jPanel6);
+        jPanel3.add(filler6);
+
+        jPanel7.setBackground(new Color(252, 252, 252));
+        jPanel7.setBorder(BorderFactory.createTitledBorder("Tabla de particiones"));
+        jPanel7.setLayout(new BorderLayout());
 
         jScrollPane2.setBackground(new Color(252, 252, 252));
 
@@ -168,7 +180,9 @@ public class Vista extends JFrame
         tablaParticiones.setGridColor(new Color(237, 237, 237));
         jScrollPane2.setViewportView(tablaParticiones);
 
-        jPanel3.add(jScrollPane2);
+        jPanel7.add(jScrollPane2, BorderLayout.CENTER);
+
+        jPanel3.add(jPanel7);
 
         getContentPane().add(jPanel3, BorderLayout.CENTER);
 
@@ -183,15 +197,16 @@ public class Vista extends JFrame
         jLabel4.setText("SIMULACIÓN DE ASIGNACIÓN DE MEMORIA CON MVT");
         jLabel4.setAlignmentX(0.5F);
         jPanel2.add(jLabel4);
+        jPanel2.add(filler7);
 
         jPanel4.setBackground(new Color(252, 252, 252));
-        FlowLayout flowLayout1 = new FlowLayout();
-        flowLayout1.setAlignOnBaseline(true);
-        jPanel4.setLayout(flowLayout1);
+        jPanel4.setLayout(new GridBagLayout());
 
-        jScrollPane3.setMaximumSize(new Dimension(480, 110));
-        jScrollPane3.setMinimumSize(new Dimension(480, 110));
-        jScrollPane3.setPreferredSize(new Dimension(480, 110));
+        jPanel10.setBackground(new Color(252, 252, 252));
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.01;
+        jPanel4.add(jPanel10, gridBagConstraints);
 
         tablaProcesos.setBackground(new Color(252, 252, 252));
         tablaProcesos.setModel(new DefaultTableModel(
@@ -209,15 +224,38 @@ public class Vista extends JFrame
         tablaProcesos.setGridColor(new Color(237, 237, 237));
         jScrollPane3.setViewportView(tablaProcesos);
 
-        jPanel4.add(jScrollPane3);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        jPanel4.add(jScrollPane3, gridBagConstraints);
+
+        jPanel8.setBackground(new Color(252, 252, 252));
+        jPanel8.setLayout(new BorderLayout());
+
+        jPanel11.setBackground(new Color(252, 252, 252));
+        jPanel11.add(filler1);
 
         btnAdmProcesos.setText("<html><font size=-1><center>Administrar<p>procesos</center></html>");
         btnAdmProcesos.setAlignmentX(0.5F);
         btnAdmProcesos.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnAdmProcesos.setHorizontalTextPosition(SwingConstants.CENTER);
-        jPanel4.add(btnAdmProcesos);
+        jPanel11.add(btnAdmProcesos);
+
+        jPanel8.add(jPanel11, BorderLayout.NORTH);
+
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        jPanel4.add(jPanel8, gridBagConstraints);
+
+        jPanel9.setBackground(new Color(252, 252, 252));
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.01;
+        jPanel4.add(jPanel9, gridBagConstraints);
 
         jPanel2.add(jPanel4);
+        jPanel2.add(filler8);
 
         getContentPane().add(jPanel2, BorderLayout.NORTH);
 
@@ -227,15 +265,11 @@ public class Vista extends JFrame
         getContentPane().add(jPanel5, BorderLayout.WEST);
 
         panelGrafico.setBackground(new Color(252, 252, 252));
+        panelGrafico.setBorder(BorderFactory.createTitledBorder("Representación gráfica"));
         panelGrafico.setMaximumSize(new Dimension(400, 114));
         panelGrafico.setMinimumSize(new Dimension(400, 114));
         panelGrafico.setPreferredSize(new Dimension(400, 114));
         panelGrafico.setLayout(new BoxLayout(panelGrafico, BoxLayout.Y_AXIS));
-
-        jLabel5.setText("Representación gráfica");
-        jLabel5.setAlignmentX(0.5F);
-        panelGrafico.add(jLabel5);
-
         getContentPane().add(panelGrafico, BorderLayout.EAST);
 
         pack();
@@ -296,15 +330,21 @@ public class Vista extends JFrame
     private Box.Filler filler3;
     private Box.Filler filler4;
     private Box.Filler filler5;
-    private JLabel jLabel2;
-    private JLabel jLabel3;
+    private Box.Filler filler6;
+    private Box.Filler filler7;
+    private Box.Filler filler8;
     private JLabel jLabel4;
-    private JLabel jLabel5;
     private JPanel jPanel1;
+    private JPanel jPanel10;
+    private JPanel jPanel11;
     private JPanel jPanel2;
     private JPanel jPanel3;
     private JPanel jPanel4;
     private JPanel jPanel5;
+    private JPanel jPanel6;
+    private JPanel jPanel7;
+    private JPanel jPanel8;
+    private JPanel jPanel9;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JScrollPane jScrollPane3;
