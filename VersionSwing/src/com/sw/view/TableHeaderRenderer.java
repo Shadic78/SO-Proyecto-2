@@ -20,8 +20,7 @@ public class TableHeaderRenderer implements TableCellRenderer
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
     {
-
-        JLabel label = new JLabel((String) value);
+        JLabel label = new JLabel(String.valueOf(value));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font("Tahoma", Font.BOLD, 13));
         label.setSize(30, label.getWidth());

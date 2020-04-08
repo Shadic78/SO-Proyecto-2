@@ -148,7 +148,7 @@ public class Vista extends JFrame
             },
             new String []
             {
-                "Proceso", "Tamaño", "Tiempo de llegada", "Tiempo finaliza"
+                "Proceso", "Tamaño", "Tiempo de llegada", "Duración"
             }
         ));
         tablaProcesos.setGridColor(new Color(237, 237, 237));

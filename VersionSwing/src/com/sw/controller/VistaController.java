@@ -42,9 +42,9 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
         tableManager.initTabla(vista.getTablaAreasLibres());
         tableManager.initTabla(vista.getTablaParticiones());
 
-        tableManager.initSelectionBehavior(vista.getTablaProcesos());
-        tableManager.initSelectionBehavior(vista.getTablaAreasLibres());
-        tableManager.initSelectionBehavior(vista.getTablaParticiones());
+        tableManager.initTableSelectionBehavior(vista.getTablaProcesos());
+        tableManager.initTableSelectionBehavior(vista.getTablaAreasLibres());
+        tableManager.initTableSelectionBehavior(vista.getTablaParticiones());
 
         vista.getBtnSigMomento().addActionListener(this::accionBtnSigMomento);
         vista.getBtnAdmProcesos().addActionListener(this::accionBtnAdmProcesos);
@@ -64,9 +64,11 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
     {
         os = new OS(10, ram, procesos);
         os.addObserver(this);
+
         grafico = new Grafico(ram.MAX_TAM_MEMORIA(), os.MEMORIA_OS());
         vista.getPanelGrafico().add(grafico);
         repintarGrafico();
+
         tableManager.actualizarTablaProcesos(vista.getTablaProcesos(), procesos);
         actualizarTablas();
     }
@@ -83,9 +85,11 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
         EventQueue.invokeLater(() ->
         {
             AdmProcesos vistaFrm = new AdmProcesos(vista);
-            vistaFrm.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+            AdmProcesosController admProcesosController = new AdmProcesosController(vistaFrm, this);
+            admProcesosController.establecerDatosPorDefecto(os.getProcessHandler().getProcesos());
             vistaFrm.setLocationRelativeTo(vista);
-            new AdmProcesosController(vistaFrm);
+            vistaFrm.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+            vistaFrm.setVisible(true);
         });
     }
 

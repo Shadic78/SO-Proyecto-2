@@ -251,7 +251,7 @@ public class ProcessHandler extends Observable implements Notificador
 
     public boolean hayProcesosPorDespachar()
     {
-        return !getColaProcesos().isEmpty();
+        return !getProcesos().isEmpty();
     }
 
     public boolean hayProcesosEnMemoria()
@@ -259,7 +259,7 @@ public class ProcessHandler extends Observable implements Notificador
         return !ram.getParticiones().isEmpty();
     }
 
-    public ArrayList<Proceso> getColaProcesos()
+    public ArrayList<Proceso> getProcesos()
     {
         return colaProcesos;
     }

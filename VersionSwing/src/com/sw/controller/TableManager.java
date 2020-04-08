@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -47,9 +48,9 @@ public class TableManager
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     }
 
-    public void initSelectionBehavior(JTable table)
+    public void initTableSelectionBehavior(JTable table)
     {
-        table.addFocusListener(new FocusAdapter()
+        initTableSelectionBehavior(table, new FocusAdapter()
         {
             @Override
             public void focusLost(FocusEvent e)
@@ -57,6 +58,11 @@ public class TableManager
                 table.clearSelection();
             }
         });
+    }
+
+    public void initTableSelectionBehavior(JTable table, FocusListener focusListener)
+    {
+        table.addFocusListener(focusListener);
 
         table.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ESCAPE"), "Clear selection");
         table.getActionMap().put("Clear selection", new AbstractAction()
@@ -121,7 +127,7 @@ public class TableManager
         });
     }
 
-    private void vaciarTabla(JTable table)
+    public void vaciarTabla(JTable table)
     {
         DefaultTableModel tableModel = getDefaultTableModel(table);
 
@@ -129,7 +135,18 @@ public class TableManager
             tableModel.removeRow(0);
     }
 
-    private DefaultTableModel getDefaultTableModel(JTable table)
+    public void anadirFilaTabla(JTable table, Object[] fila)
+    {
+        DefaultTableModel tableModel = getDefaultTableModel(table);
+        tableModel.addRow(fila);
+    }
+
+    public int[] obtenerFilasSeleccionadas(JTable table)
+    {
+        return table.getSelectedRows();
+    }
+
+    public DefaultTableModel getDefaultTableModel(JTable table)
     {
         return (DefaultTableModel) table.getModel();
     }

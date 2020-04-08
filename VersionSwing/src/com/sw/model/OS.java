@@ -16,11 +16,11 @@ public class OS extends Observable implements Observer, Notificador
     private final ProcessHandler processHandler;
     private final int MEMORIA_OS;
 
-    public OS(final int MEMORIA_OS, RAM ram, ArrayList<Proceso> colaProcesos)
+    public OS(final int MEMORIA_OS, RAM ram, ArrayList<Proceso> procesos)
     {
         this.MEMORIA_OS = MEMORIA_OS;
         memoryHandler = new MemoryHandler(ram);
-        processHandler = new ProcessHandler(ram, colaProcesos);
+        processHandler = new ProcessHandler(ram, procesos);
 
         memoryHandler.addObserver(this);
         processHandler.addObserver(this);
@@ -31,6 +31,7 @@ public class OS extends Observable implements Observer, Notificador
     private void iniciarOS(RAM ram)
     {
         AreaLibre areaLibre = new AreaLibre(MEMORIA_OS, ram.MAX_TAM_MEMORIA() - MEMORIA_OS);
+        ram.eliminarTodosDatos();
         ram.anadirAreaLibre(areaLibre);
     }
 
@@ -84,6 +85,11 @@ public class OS extends Observable implements Observer, Notificador
         setChanged();
         notifyObservers(mensaje);
         clearChanged();
+    }
+
+    public ProcessHandler getProcessHandler()
+    {
+        return processHandler;
     }
 
 }
