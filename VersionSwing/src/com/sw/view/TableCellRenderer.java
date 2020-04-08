@@ -19,8 +19,7 @@ public class TableCellRenderer extends DefaultTableCellRenderer
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
     {
-        JLabel label = new JLabel((String) value);
-        label.setText("45K");
+        JLabel label = new JLabel(String.valueOf(value));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font("Tahoma", Font.PLAIN, 12));
         label.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.WHITE));

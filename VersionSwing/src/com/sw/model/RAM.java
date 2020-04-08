@@ -95,6 +95,7 @@ public class RAM implements RandomAccess, Volatil
     {
         areasLibres.clear();
         particiones.clear();
+        fragmentos.clear();
     }
 
 }

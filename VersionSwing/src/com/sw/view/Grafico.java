@@ -8,6 +8,7 @@ import com.sw.model.RAM;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -27,9 +28,11 @@ public class Grafico extends JPanel
     private final Color COLOR_AREA_LIBRE = new Color(131, 157, 165);
     private final Color COLOR_PARTICION = new Color(232, 232, 232);
     private final Color COLOR_FRAGMENTO = new Color(221, 79, 67);
+    private final Color COLOR_OS_BLOCK = new Color(0, 112, 192);
+    private final Color COLOR_TEXTO = Color.BLACK;
 
-    private final Font DEFAULT_FONT = new Font("Tahoma", Font.BOLD, 11);
-    private final Font BLOCK_OS_FONT = new Font("Tahoma", Font.BOLD, 24);
+    private final Font DEFAULT_FONT = new Font("Tahoma", Font.PLAIN, 13);
+    private final Font OS_BLOCK_FONT = new Font("Tahoma", Font.BOLD, 24);
     private final Font CELDA_MEMORIA_FONT = new Font("Tahoma", Font.PLAIN, 14);
 
     private final int OFFSET_X = 40;
@@ -79,14 +82,19 @@ public class Grafico extends JPanel
 
     private void createOSBlock(Graphics2D g)
     {
-        dibujarCeldaMemoria(g, BLOCK_OS_FONT, "SO", new Color(0, 112, 192), Color.WHITE, TAMANIO_MEMORIA_OS, 0);
+        dibujarCeldaMemoria(g, OS_BLOCK_FONT, "SO", COLOR_OS_BLOCK, Color.WHITE, TAMANIO_MEMORIA_OS, 0);
+
+        g.setColor(COLOR_TEXTO);
+        FontMetrics fm = g.getFontMetrics();
+        Rectangle bounds = getTextBounds(g, "0K");
+        g.drawString("0K", (int) (OFFSET_X - bounds.getWidth()), fm.getAscent());
     }
 
     private void dibujarAreasLibres(Graphics2D g)
     {
         areasLibres.forEach(areaLibre ->
         {
-            dibujarCeldaMemoria(g, CELDA_MEMORIA_FONT, "Área libre", COLOR_AREA_LIBRE, Color.BLACK, areaLibre.getSize(), areaLibre.getInicio());
+            dibujarCeldaMemoria(g, CELDA_MEMORIA_FONT, "Área libre", COLOR_AREA_LIBRE, Color.BLACK, areaLibre);
         });
     }
 
@@ -94,7 +102,7 @@ public class Grafico extends JPanel
     {
         particiones.forEach(particion ->
         {
-            dibujarCeldaMemoria(g, CELDA_MEMORIA_FONT, particion.getProceso().getNombre(), COLOR_PARTICION, Color.BLACK, particion.getSize(), particion.getInicio());
+            dibujarCeldaMemoria(g, CELDA_MEMORIA_FONT, particion.getProceso().getNombre(), COLOR_PARTICION, Color.BLACK, particion);
         });
     }
 
@@ -102,8 +110,15 @@ public class Grafico extends JPanel
     {
         fragmentos.forEach(fragmento ->
         {
-            dibujarCeldaMemoria(g, CELDA_MEMORIA_FONT, "Área libre", COLOR_FRAGMENTO, Color.BLACK, fragmento.getSize(), fragmento.getInicio());
+            dibujarCeldaMemoria(g, CELDA_MEMORIA_FONT, "Área libre", COLOR_FRAGMENTO, Color.BLACK, fragmento);
+
+            g.rotate(Math.toRadians(90));
+            g.setColor(COLOR_TEXTO);
+            Rectangle bounds = getTextBounds(g, "Fragmentación");
+            g.drawString("Fragmentación", (int) (getHeight() - bounds.getWidth()) / 2, -getWidth() + OFFSET_X / 2);
+            g.rotate(Math.toRadians(-90));
         });
+
     }
 
     private void dibujarCeldaMemoria(Graphics2D g, Font font, String label, Color colorCeldaMemoria, Color colorTexto, int tamanioMemoria, int posicionMemoria)
@@ -116,15 +131,41 @@ public class Grafico extends JPanel
         g.setColor(BACKGROUND_COLOR);
         g.draw(rect);
         centrarTextoEnRect(g, font, colorTexto, label, rect);
+
+        g.setFont(DEFAULT_FONT);
+        g.setColor(COLOR_TEXTO);
+        dibujarInfoCeldaMemoria(g, tamanioMemoria, posicionMemoria);
         g.setStroke(strokeActual);
+    }
+
+    private void dibujarCeldaMemoria(Graphics2D g, Font font, String label, Color colorCeldaMemoria, Color colorTexto, CeldaMemoria celdaMemoria)
+    {
+        dibujarCeldaMemoria(g, font, label, colorCeldaMemoria, colorTexto, celdaMemoria.getSize(), celdaMemoria.getInicio());
+    }
+
+    private void dibujarInfoCeldaMemoria(Graphics2D g, int tamanioMemoria, int posicionMemoria)
+    {
+        final int posicionEnGrafica = obtenerPosicionEnGrafica(posicionMemoria);
+        final int tamanioEnGrafica = obtenerTamanioEnGrafica(tamanioMemoria);
+
+        FontMetrics fm = g.getFontMetrics();
+        String finMemoria = tamanioMemoria + posicionMemoria + "K";
+        Rectangle bounds = getTextBounds(g, finMemoria);
+        g.drawString(finMemoria, (int) (OFFSET_X - bounds.getWidth()), posicionEnGrafica + tamanioEnGrafica);
+
+        g.drawLine(getWidth() - OFFSET_X - 5, posicionEnGrafica + 5, getWidth() - OFFSET_X - 5, posicionEnGrafica + tamanioEnGrafica - 5);
+
+        Rectangle boundsStringTamanioMemoria = getTextBounds(g, tamanioMemoria + "K");
+        g.drawString(tamanioMemoria + "K", (float) (getWidth() - OFFSET_X - boundsStringTamanioMemoria.getWidth() - 5), posicionEnGrafica + (tamanioEnGrafica + fm.getAscent()) / 2);
     }
 
     private void centrarTextoEnRect(Graphics2D g, Font font, Color colorTexto, String text, Rectangle rect)
     {
         g.setFont(font);
         g.setColor(colorTexto);
-        Rectangle bounds = g.getFontMetrics().getStringBounds(text, g).getBounds();
-        g.drawString(text, (int) (OFFSET_X + (rect.getWidth() - bounds.getWidth()) / 2), (int) (rect.y + (rect.getHeight() + bounds.getHeight() - 10) / 2));
+        FontMetrics fm = g.getFontMetrics();
+        Rectangle bounds = getTextBounds(g, text);
+        g.drawString(text, (int) (OFFSET_X + (rect.getWidth() - bounds.getWidth()) / 2), (int) (rect.y + (rect.getHeight() + fm.getAscent()) / 2));
         g.setFont(DEFAULT_FONT);
     }
 
@@ -152,16 +193,9 @@ public class Grafico extends JPanel
         return inicioMemoria * getHeight() / MAX_MEMORIA_RAM;
     }
 
-    private void dibujarLateralIzq(Graphics2D g)
+    private Rectangle getTextBounds(Graphics2D g, String text)
     {
-        g.setColor(BACKGROUND_COLOR);
-        g.fill(new Rectangle(0, 0, OFFSET_X, getHeight()));
-    }
-
-    private void dibujarLateralDer(Graphics2D g)
-    {
-        g.setColor(BACKGROUND_COLOR);
-        g.fill(new Rectangle(getWidth() - OFFSET_X, 0, OFFSET_X, getHeight()));
+        return g.getFontMetrics().getStringBounds(text, g).getBounds();
     }
 
 }
