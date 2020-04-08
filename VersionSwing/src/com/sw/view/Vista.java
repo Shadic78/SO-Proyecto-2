@@ -7,8 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -77,6 +76,19 @@ public class Vista extends JFrame
         btnSigMomento = new JButton();
         estado = new JLabel();
         filler5 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
+        jPanel2 = new JPanel();
+        filler4 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
+        jLabel4 = new JLabel();
+        filler7 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(0, 10));
+        jPanel4 = new JPanel();
+        jScrollPane3 = new JScrollPane();
+        tablaProcesos = new JTable();
+        btnAdmProcesos = new JButton();
+        jPanel12 = new JPanel();
+        filler8 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
+        filler1 = new Box.Filler(new Dimension(15, 0), new Dimension(15, 0), new Dimension(15, 32767));
+        filler9 = new Box.Filler(new Dimension(15, 0), new Dimension(15, 0), new Dimension(15, 32767));
+        jPanel8 = new JPanel();
         jPanel3 = new JPanel();
         jPanel6 = new JPanel();
         jScrollPane1 = new JScrollPane();
@@ -85,36 +97,12 @@ public class Vista extends JFrame
         jPanel7 = new JPanel();
         jScrollPane2 = new JScrollPane();
         tablaParticiones = new JTable();
-        jPanel2 = new JPanel();
-        filler4 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
-        jLabel4 = new JLabel();
-        filler7 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(0, 10));
-        jPanel4 = new JPanel();
-        jPanel10 = new JPanel();
-        jScrollPane3 = new JScrollPane();
-        tablaProcesos = new JTable();
-        jPanel8 = new JPanel();
-        jPanel11 = new JPanel();
-        filler1 = new Box.Filler(new Dimension(5, 0), new Dimension(5, 0), new Dimension(5, 32767));
-        btnAdmProcesos = new JButton();
-        jPanel9 = new JPanel();
-        filler8 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
-        jPanel5 = new JPanel();
-        filler2 = new Box.Filler(new Dimension(15, 0), new Dimension(15, 0), new Dimension(15, 0));
         panelGrafico = new JPanel();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBackground(new Color(252, 252, 252));
-        setMaximumSize(new Dimension(800, 600));
         setMinimumSize(new Dimension(800, 600));
-        setPreferredSize(new Dimension(800, 600));
-        addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
-                formMouseClicked(evt);
-            }
-        });
+        setPreferredSize(new Dimension(800, 700));
 
         jPanel1.setBackground(new Color(252, 252, 252));
         jPanel1.setLayout(new BoxLayout(jPanel1, BoxLayout.Y_AXIS));
@@ -133,6 +121,83 @@ public class Vista extends JFrame
         jPanel1.add(filler5);
 
         getContentPane().add(jPanel1, BorderLayout.PAGE_END);
+
+        jPanel2.setBackground(new Color(252, 252, 252));
+        jPanel2.setMaximumSize(new Dimension(450, 150));
+        jPanel2.setMinimumSize(new Dimension(450, 150));
+        jPanel2.setPreferredSize(new Dimension(450, 180));
+        jPanel2.setLayout(new BoxLayout(jPanel2, BoxLayout.Y_AXIS));
+        jPanel2.add(filler4);
+
+        jLabel4.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        jLabel4.setText("SIMULACIÓN DE ASIGNACIÓN DE MEMORIA CON MVT");
+        jLabel4.setAlignmentX(0.5F);
+        jPanel2.add(jLabel4);
+        jPanel2.add(filler7);
+
+        jPanel4.setBackground(new Color(252, 252, 252));
+        jPanel4.setLayout(new GridBagLayout());
+
+        tablaProcesos.setBackground(new Color(252, 252, 252));
+        tablaProcesos.setModel(new DefaultTableModel(
+            new Object [][]
+            {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String []
+            {
+                "Proceso", "Tamaño", "Tiempo de llegada", "Tiempo finaliza"
+            }
+        ));
+        tablaProcesos.setGridColor(new Color(237, 237, 237));
+        jScrollPane3.setViewportView(tablaProcesos);
+
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new Insets(0, 40, 0, 0);
+        jPanel4.add(jScrollPane3, gridBagConstraints);
+
+        btnAdmProcesos.setText("<html><font size=-1><center>Administrar<p>procesos</center></html>");
+        btnAdmProcesos.setAlignmentX(0.5F);
+        btnAdmProcesos.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAdmProcesos.setHorizontalTextPosition(SwingConstants.CENTER);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.insets = new Insets(0, 10, 0, 45);
+        jPanel4.add(btnAdmProcesos, gridBagConstraints);
+
+        jPanel12.setBackground(new Color(252, 252, 252));
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new Insets(0, 10, 0, 45);
+        jPanel4.add(jPanel12, gridBagConstraints);
+
+        jPanel2.add(jPanel4);
+        jPanel2.add(filler8);
+
+        getContentPane().add(jPanel2, BorderLayout.NORTH);
+
+        filler1.setBackground(new Color(252, 252, 252));
+        filler1.setOpaque(true);
+        getContentPane().add(filler1, BorderLayout.LINE_END);
+
+        filler9.setBackground(new Color(252, 252, 252));
+        filler9.setOpaque(true);
+        getContentPane().add(filler9, BorderLayout.LINE_START);
+
+        jPanel8.setBackground(new Color(252, 252, 252));
+        GridBagLayout jPanel8Layout = new GridBagLayout();
+        jPanel8Layout.columnWidths = new int[] {400};
+        jPanel8Layout.columnWeights = new double[] {0.8, 0.2};
+        jPanel8.setLayout(jPanel8Layout);
 
         jPanel3.setBackground(new Color(252, 252, 252));
         jPanel3.setLayout(new BoxLayout(jPanel3, BoxLayout.Y_AXIS));
@@ -184,85 +249,11 @@ public class Vista extends JFrame
 
         jPanel3.add(jPanel7);
 
-        getContentPane().add(jPanel3, BorderLayout.CENTER);
-
-        jPanel2.setBackground(new Color(252, 252, 252));
-        jPanel2.setMaximumSize(new Dimension(450, 150));
-        jPanel2.setMinimumSize(new Dimension(450, 150));
-        jPanel2.setPreferredSize(new Dimension(450, 150));
-        jPanel2.setLayout(new BoxLayout(jPanel2, BoxLayout.Y_AXIS));
-        jPanel2.add(filler4);
-
-        jLabel4.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        jLabel4.setText("SIMULACIÓN DE ASIGNACIÓN DE MEMORIA CON MVT");
-        jLabel4.setAlignmentX(0.5F);
-        jPanel2.add(jLabel4);
-        jPanel2.add(filler7);
-
-        jPanel4.setBackground(new Color(252, 252, 252));
-        jPanel4.setLayout(new GridBagLayout());
-
-        jPanel10.setBackground(new Color(252, 252, 252));
-        gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.fill = GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.01;
-        jPanel4.add(jPanel10, gridBagConstraints);
-
-        tablaProcesos.setBackground(new Color(252, 252, 252));
-        tablaProcesos.setModel(new DefaultTableModel(
-            new Object [][]
-            {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String []
-            {
-                "Proceso", "Tamaño", "Tiempo de llegada", "Tiempo finaliza"
-            }
-        ));
-        tablaProcesos.setGridColor(new Color(237, 237, 237));
-        jScrollPane3.setViewportView(tablaProcesos);
-
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
-        jPanel4.add(jScrollPane3, gridBagConstraints);
-
-        jPanel8.setBackground(new Color(252, 252, 252));
-        jPanel8.setLayout(new BorderLayout());
-
-        jPanel11.setBackground(new Color(252, 252, 252));
-        jPanel11.add(filler1);
-
-        btnAdmProcesos.setText("<html><font size=-1><center>Administrar<p>procesos</center></html>");
-        btnAdmProcesos.setAlignmentX(0.5F);
-        btnAdmProcesos.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAdmProcesos.setHorizontalTextPosition(SwingConstants.CENTER);
-        jPanel11.add(btnAdmProcesos);
-
-        jPanel8.add(jPanel11, BorderLayout.NORTH);
-
-        gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.fill = GridBagConstraints.BOTH;
-        jPanel4.add(jPanel8, gridBagConstraints);
-
-        jPanel9.setBackground(new Color(252, 252, 252));
-        gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.fill = GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.01;
-        jPanel4.add(jPanel9, gridBagConstraints);
-
-        jPanel2.add(jPanel4);
-        jPanel2.add(filler8);
-
-        getContentPane().add(jPanel2, BorderLayout.NORTH);
-
-        jPanel5.setBackground(new Color(252, 252, 252));
-        jPanel5.add(filler2);
-
-        getContentPane().add(jPanel5, BorderLayout.WEST);
+        jPanel8.add(jPanel3, gridBagConstraints);
 
         panelGrafico.setBackground(new Color(252, 252, 252));
         panelGrafico.setBorder(BorderFactory.createTitledBorder("Representación gráfica"));
@@ -270,16 +261,17 @@ public class Vista extends JFrame
         panelGrafico.setMinimumSize(new Dimension(400, 114));
         panelGrafico.setPreferredSize(new Dimension(400, 114));
         panelGrafico.setLayout(new BoxLayout(panelGrafico, BoxLayout.Y_AXIS));
-        getContentPane().add(panelGrafico, BorderLayout.EAST);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        jPanel8.add(panelGrafico, gridBagConstraints);
+
+        getContentPane().add(jPanel8, BorderLayout.CENTER);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void formMouseClicked(MouseEvent evt)//GEN-FIRST:event_formMouseClicked
-    {//GEN-HEADEREND:event_formMouseClicked
-        requestFocus();
-    }//GEN-LAST:event_formMouseClicked
 
     public JPanel getPanelGrafico()
     {
@@ -326,25 +318,22 @@ public class Vista extends JFrame
     private JButton btnSigMomento;
     private JLabel estado;
     private Box.Filler filler1;
-    private Box.Filler filler2;
     private Box.Filler filler3;
     private Box.Filler filler4;
     private Box.Filler filler5;
     private Box.Filler filler6;
     private Box.Filler filler7;
     private Box.Filler filler8;
+    private Box.Filler filler9;
     private JLabel jLabel4;
     private JPanel jPanel1;
-    private JPanel jPanel10;
-    private JPanel jPanel11;
+    private JPanel jPanel12;
     private JPanel jPanel2;
     private JPanel jPanel3;
     private JPanel jPanel4;
-    private JPanel jPanel5;
     private JPanel jPanel6;
     private JPanel jPanel7;
     private JPanel jPanel8;
-    private JPanel jPanel9;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JScrollPane jScrollPane3;
