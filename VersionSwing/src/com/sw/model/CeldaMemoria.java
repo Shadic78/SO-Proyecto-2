@@ -27,7 +27,7 @@ package com.sw.model;
  *
  * @author Equipo 1
  */
-public abstract class CeldaMemoria
+public abstract class CeldaMemoria implements Comparable<CeldaMemoria>
 {
 
     private int inicio;
@@ -79,6 +79,12 @@ public abstract class CeldaMemoria
     public String toString()
     {
         return "CeldaMemoria{" + "inicio=" + inicio + ", size=" + size + '}';
+    }
+
+    @Override
+    public int compareTo(CeldaMemoria o)
+    {
+        return getInicio() - o.getInicio();
     }
 
 }
