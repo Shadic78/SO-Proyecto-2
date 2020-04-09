@@ -17,10 +17,10 @@ import java.util.ArrayList;
 public class Main
 {
 
-    public static ArrayList<CeldaMemoria> areasLibres = new ArrayList<CeldaMemoria>();
-    public static ArrayList<CeldaMemoria> particiones = new ArrayList<CeldaMemoria>();
-    public static ArrayList<Proceso> colaProcesos = new ArrayList<Proceso>();
-    public static ArrayList<Proceso> colaAuxiliarProcesos = new ArrayList<Proceso>();
+    public static ArrayList<CeldaMemoria> areasLibres = new ArrayList<>();
+    public static ArrayList<CeldaMemoria> particiones = new ArrayList<>();
+    public static ArrayList<Proceso> colaProcesos = new ArrayList<>();
+    public static ArrayList<Proceso> colaAuxiliarProcesos = new ArrayList<>();
 
     public static void main(String[] args)
     {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Modelo;
 
 import java.util.ArrayList;
@@ -23,15 +18,20 @@ public class ModeloTablas
         model.addColumn("Tamaño");
         model.addColumn("Llegada");
         model.addColumn("Duracion");
+
         for (int i = 0; i < procesos.size(); i++)
         {
             Proceso proceso = procesos.get(i);
+
             model.addRow(new String[]
             {
-                proceso.getNombre(), Integer.toString(proceso.getSize()),
-                Integer.toString(proceso.getLlegada()), Integer.toString(proceso.getDuracion())
+                proceso.getNombre(),
+                Integer.toString(proceso.getSize()),
+                Integer.toString(proceso.getLlegada()),
+                Integer.toString(proceso.getDuracion())
             });
         }
+
         tabla.setModel(model);
     }
 
@@ -42,41 +42,54 @@ public class ModeloTablas
         model.addColumn("Localidad");
         model.addColumn("Tamaño");
         model.addColumn("Estado");
+
         for (int i = 0; i < areasLibres.size(); i++)
         {
             CeldaMemoria celda = areasLibres.get(i);
             String estado = "Disponible";
+
             if (!celda.isDisponible())
                 estado = "Ocupado";
+
             model.addRow(new String[]
             {
                 Integer.toString(i), Integer.toString(celda.getInicio()),
                 Integer.toString(celda.getSize()), estado
             });
         }
+
         tabla.setModel(model);
     }
 
     public void actualizarTablaParticiones(JTable tabla, ArrayList<CeldaMemoria> particiones)
     {
         DefaultTableModel model = new DefaultTableModel();
+
         model.addColumn("Numero");
         model.addColumn("Localidad");
         model.addColumn("Tamaño");
         model.addColumn("Estado");
         model.addColumn("Proceso");
+
         for (int i = 0; i < particiones.size(); i++)
         {
             CeldaMemoria celda = particiones.get(i);
             String estado = "Disponible";
+
             if (!celda.isDisponible())
                 estado = "Ocupado";
+
             model.addRow(new String[]
             {
-                Integer.toString(i), Integer.toString(celda.getInicio()),
-                Integer.toString(celda.getSize()), estado, celda.getProceso().getNombre()
+                Integer.toString(i),
+                Integer.toString(celda.getInicio()),
+                Integer.toString(celda.getSize()),
+                estado,
+                celda.getProceso().getNombre()
             });
+
         }
+
         tabla.setModel(model);
     }
 
