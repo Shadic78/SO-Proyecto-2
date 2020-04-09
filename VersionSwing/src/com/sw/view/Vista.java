@@ -123,6 +123,7 @@ public class Vista extends JFrame
         panelGrafico = new JPanel();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MVT");
         setBackground(new Color(252, 252, 252));
         setMinimumSize(new Dimension(800, 600));
         setPreferredSize(new Dimension(800, 700));
@@ -165,9 +166,7 @@ public class Vista extends JFrame
         tablaProcesos.setModel(new DefaultTableModel(
             new Object [][]
             {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String []
             {

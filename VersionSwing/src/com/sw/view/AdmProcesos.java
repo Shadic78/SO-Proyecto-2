@@ -126,6 +126,7 @@ public class AdmProcesos extends JDialog
         filler6 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 10), new Dimension(32767, 10));
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Administrar procesos");
         setMinimumSize(new Dimension(500, 400));
         setPreferredSize(new Dimension(500, 400));
 
