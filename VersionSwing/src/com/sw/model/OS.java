@@ -103,16 +103,6 @@ public class OS extends Observable implements Observer, Notificador
             momento++;
     }
 
-    public int MEMORIA_OS()
-    {
-        return MEMORIA_OS;
-    }
-
-    public int getMomento()
-    {
-        return momento;
-    }
-
     @Override
     public void update(Observable o, Object arg)
     {
@@ -125,6 +115,16 @@ public class OS extends Observable implements Observer, Notificador
         setChanged();
         notifyObservers(mensaje);
         clearChanged();
+    }
+
+    public int MEMORIA_OS()
+    {
+        return MEMORIA_OS;
+    }
+
+    public int getMomento()
+    {
+        return momento;
     }
 
     public ProcessHandler getProcessHandler()

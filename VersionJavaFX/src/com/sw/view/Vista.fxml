@@ -26,11 +26,11 @@
                     </VBox.margin>
                     <children>
                         <TableView fx:id="tablaProcesos" HBox.hgrow="ALWAYS">
-                            <columns> 
+                            <columns>
                                 <TableColumn prefWidth="75.0" text="Proceso" />
                                 <TableColumn prefWidth="75.0" text="Tamaño" />
                                 <TableColumn prefWidth="75.0" text="Tiempo de llegada" />
-                                <TableColumn prefWidth="75.0" text="Tiempo en que finaliza" />
+                                <TableColumn prefWidth="75.0" text="Duración" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

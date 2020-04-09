@@ -1,15 +1,38 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2020 SonBear.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.sw.model;
 
 /**
  *
- * @author Equipo 1
+ * @author SonBear
  */
 public class Proceso
 {
 
     private String nombre;
     private int size;
-    private int llegada;
+    private int tiempoLlegada;
     private int duracion;
     private int nProceso;
 
@@ -17,7 +40,7 @@ public class Proceso
     {
         this.nombre = nombre;
         this.size = size;
-        this.llegada = llegada;
+        this.tiempoLlegada = llegada;
         this.duracion = duracion;
     }
 
@@ -41,14 +64,14 @@ public class Proceso
         this.size = size;
     }
 
-    public int getLlegada()
+    public int getTiempoLlegada()
     {
-        return llegada;
+        return tiempoLlegada;
     }
 
     public void setLlegada(int llegada)
     {
-        this.llegada = llegada;
+        this.tiempoLlegada = llegada;
     }
 
     public int getDuracion()
@@ -74,7 +97,7 @@ public class Proceso
     @Override
     public String toString()
     {
-        return "Proceso{" + "nombre=" + nombre + ", size=" + size + ", llegada=" + llegada + ", duracion=" + duracion + ", nProceso=" + nProceso + '}';
+        return "Proceso{" + "nombre=" + nombre + ", size=" + size + ", llegada=" + tiempoLlegada + ", duracion=" + duracion + ", nProceso=" + nProceso + '}';
     }
 
 }

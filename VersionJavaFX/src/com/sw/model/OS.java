@@ -1,9 +1,31 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2020 SonBear.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.sw.model;
 
 import java.util.Observable;
 import java.util.Observer;
 import javafx.collections.FXCollections;
-import static javafx.collections.FXCollections.observableArrayList;
 import javafx.collections.ObservableList;
 
 /**
@@ -14,15 +36,20 @@ import javafx.collections.ObservableList;
 public class OS extends Observable implements Observer, Notificador
 {
 
+    public static final int MOMENTO_INICIAL = 0;
+    public static final int MOMENTO_FINAL = -1;
+
     private final MemoryHandler memoryHandler;
     private final ProcessHandler processHandler;
     private final int MEMORIA_OS;
+    private int momento;
 
-    public OS(final int MEMORIA_OS, RAM ram, ObservableList<Proceso> colaProcesos)
+    public OS(final int MEMORIA_OS, RAM ram, ObservableList<Proceso> procesos)
     {
         this.MEMORIA_OS = MEMORIA_OS;
+        this.momento = MOMENTO_INICIAL;
         memoryHandler = new MemoryHandler(ram);
-        processHandler = new ProcessHandler(ram, observableArrayList(colaProcesos));
+        processHandler = new ProcessHandler(ram, FXCollections.observableArrayList(procesos));
 
         memoryHandler.addObserver(this);
         processHandler.addObserver(this);
@@ -33,6 +60,7 @@ public class OS extends Observable implements Observer, Notificador
     private void iniciarOS(RAM ram)
     {
         AreaLibre areaLibre = new AreaLibre(MEMORIA_OS, ram.MAX_TAM_MEMORIA() - MEMORIA_OS);
+        ram.eliminarTodosDatos();
         ram.anadirAreaLibre(areaLibre);
     }
 
@@ -63,15 +91,16 @@ public class OS extends Observable implements Observer, Notificador
             processHandler.insertarProcesoEnMemoria();
 
         else
+        {
             notificar("El programa ha terminado");
+            momento = MOMENTO_FINAL;
+        }
 
         memoryHandler.compactarMemoria();
         memoryHandler.revisarFragmentacion();
-    }
 
-    public int MEMORIA_OS()
-    {
-        return MEMORIA_OS;
+        if (momento != MOMENTO_FINAL)
+            momento++;
     }
 
     @Override
@@ -86,6 +115,26 @@ public class OS extends Observable implements Observer, Notificador
         setChanged();
         notifyObservers(mensaje);
         clearChanged();
+    }
+
+    public int MEMORIA_OS()
+    {
+        return MEMORIA_OS;
+    }
+
+    public int getMomento()
+    {
+        return momento;
+    }
+
+    public MemoryHandler getMemoryHandler()
+    {
+        return memoryHandler;
+    }
+
+    public ProcessHandler getProcessHandler()
+    {
+        return processHandler;
     }
 
 }
