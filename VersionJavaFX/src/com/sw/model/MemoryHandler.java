@@ -8,7 +8,7 @@
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * furnished to do So, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
@@ -24,10 +24,8 @@
 package com.sw.model;
 
 import java.util.Comparator;
-import static java.util.Comparator.comparing;
 import java.util.Observable;
 import java.util.stream.Collectors;
-import static java.util.stream.Collectors.toCollection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -109,7 +107,7 @@ public class MemoryHandler extends Observable implements Notificador
 
         if (ram.getAreasLibres().size() > 1)
             ram.setFragmentos(ram.getAreasLibres().stream().map(Fragmento::new)
-                    .collect(toCollection(FXCollections::observableArrayList)));
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList)));
     }
 
     /**
@@ -117,13 +115,13 @@ public class MemoryHandler extends Observable implements Notificador
      */
     private void ordenarMemoria()
     {
-        ram.getAreasLibres().sort(comparing(CeldaMemoria::getInicio));
+        ram.getAreasLibres().sort(Comparator.comparing(CeldaMemoria::getInicio));
     }
 
-    public ObservableList<? extends CeldaMemoria> ordenarCeldasMemoriaPorInicio(ObservableList<? extends CeldaMemoria> celdasMemoria)
+    public ObservableList<CeldaMemoria> ordenarCeldasMemoriaPorInicio(ObservableList<? extends CeldaMemoria> celdasMemoria)
     {
-        ObservableList<? extends CeldaMemoria> celdasMemoriaOrdenadas = celdasMemoria.stream()
-                .sorted(Comparator.comparing(CeldaMemoria::getInicio))
+        ObservableList<CeldaMemoria> celdasMemoriaOrdenadas = celdasMemoria.stream()
+                .sorted()
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         for (int i = 0; i < celdasMemoriaOrdenadas.size(); i++)

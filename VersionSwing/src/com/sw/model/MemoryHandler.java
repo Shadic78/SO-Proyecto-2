@@ -24,9 +24,9 @@
 package com.sw.model;
 
 import java.util.ArrayList;
-import static java.util.Comparator.comparing;
+import java.util.Comparator;
 import java.util.Observable;
-import static java.util.stream.Collectors.toCollection;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -105,7 +105,7 @@ public class MemoryHandler extends Observable implements Notificador
         ram.getFragmentos().clear();
 
         if (ram.getAreasLibres().size() > 1)
-            ram.setFragmentos(ram.getAreasLibres().stream().map(Fragmento::new).collect(toCollection(ArrayList::new)));
+            ram.setFragmentos(ram.getAreasLibres().stream().map(Fragmento::new).collect(Collectors.toCollection(ArrayList::new)));
     }
 
     /**
@@ -113,12 +113,14 @@ public class MemoryHandler extends Observable implements Notificador
      */
     private void ordenarMemoria()
     {
-        ram.getAreasLibres().sort(comparing(CeldaMemoria::getInicio));
+        ram.getAreasLibres().sort(Comparator.comparing(CeldaMemoria::getInicio));
     }
 
-    public ArrayList<? extends CeldaMemoria> ordenarCeldasMemoriaPorInicio(ArrayList<? extends CeldaMemoria> celdasMemoria)
+    public ArrayList<CeldaMemoria> ordenarCeldasMemoriaPorInicio(ArrayList<? extends CeldaMemoria> celdasMemoria)
     {
-        return celdasMemoria.stream().sorted(comparing(CeldaMemoria::getInicio)).collect(toCollection(ArrayList::new));
+        return celdasMemoria.stream()
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
