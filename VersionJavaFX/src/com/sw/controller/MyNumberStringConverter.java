@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2020 Eusebio Ajax.
+ * Copyright 2020 SonBear.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,44 +24,40 @@
 package com.sw.controller;
 
 import java.text.ParseException;
-import javax.swing.JFormattedTextField;
+import javafx.util.converter.NumberStringConverter;
 
 /**
  *
- * @author Eusebio Ajax
+ * @author SonBear
  */
-public class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory
+public class MyNumberStringConverter extends NumberStringConverter
 {
 
     @Override
-    public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf)
+    public Number fromString(String value)
     {
-        return new JFormattedTextField.AbstractFormatter()
+        if (value.equals(""))
+            return null;
+
+        try
         {
-            @Override
-            public Object stringToValue(String text) throws ParseException
-            {
-                try
-                {
-                    int number = Integer.parseInt(text);
+            int number = Integer.parseInt(value);
 
-                    if (number <= 0)
-                        throw new ParseException(text, 0);
+            if (number <= 0)
+                throw new ParseException(value, 0);
 
-                    return number;
+            return number;
 
-                } catch (NumberFormatException e)
-                {
-                    throw new ParseException(text, 0);
-                }
-            }
+        } catch (NumberFormatException | ParseException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
-            @Override
-            public String valueToString(Object value) throws ParseException
-            {
-                return String.valueOf(value == null ? "" : value);
-            }
-        };
+    @Override
+    public String toString(Number value)
+    {
+        return value == null ? "" : String.valueOf(Integer.parseInt(String.valueOf(value.intValue())));
     }
 
 }

@@ -1,3 +1,26 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2020 SonBear.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.sw.controller;
 
 import com.sw.model.AreaLibre;
@@ -9,14 +32,17 @@ import com.sw.view.Grafico;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import static javafx.application.Platform.runLater;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import static javafx.scene.Cursor.HAND;
+import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
@@ -51,6 +77,7 @@ public class VistaController implements Initializable, Observer, Controller<Obse
     private TableManager tableManager;
     private Grafico grafico;
     private Stage myStage;
+    private ObservableList<Proceso> procesos;
 
     /**
      * Initializes the controller class.
@@ -64,39 +91,42 @@ public class VistaController implements Initializable, Observer, Controller<Obse
         ram = new RAM(64);
         tableManager = TableManager.getInstance();
         btnSigPaso.setWrapText(true);
-        btnSigPaso.setCursor(HAND);
+        btnSigPaso.setCursor(Cursor.HAND);
+        btnAdmProcesos.setCursor(Cursor.HAND);
         initTablas();
-    }
-
-    @Override
-    public void setDefaultData(ObservableList<Proceso> colaProcesos)
-    {
-        os = new OS(10, ram, colaProcesos);
-        os.addObserver(this);
-        tablaProcesos.setItems(colaProcesos);
-        tablaAreasLibres.setItems(ram.getAreasLibres());
-        tablaParticiones.setItems(ram.getParticiones());
-        grafico = new Grafico(panel, ram.MAX_TAM_MEMORIA(), os.MEMORIA_OS());
-        actualizarGrafico();
-    }
-
-    @Override
-    public void initStage(Stage s)
-    {
-        myStage = s;
     }
 
     private void initTablas()
     {
-        tableManager.inicializarTablaProcesos(tablaProcesos);
-        tableManager.inicializarTablaAreasLibres(tablaAreasLibres);
-        tableManager.inicializarTablaParticiones(tablaParticiones);
+        tableManager.initTablaProcesos(tablaProcesos);
+        tableManager.initTablaAreasLibres(tablaAreasLibres);
+        tableManager.initTablaParticiones(tablaParticiones);
+    }
+
+    @Override
+    public void setDefaultData(ObservableList<Proceso> procesos, Controller<Object> controllerPadre)
+    {
+        this.procesos = procesos;
+        reiniciarSimulacion(procesos);
+
+        if (grafico == null)
+        {
+            grafico = new Grafico(panel, ram.MAX_TAM_MEMORIA(), os.MEMORIA_OS());
+            actualizarGrafico();
+        }
+    }
+
+    @Override
+    public void initStage(Stage myStage)
+    {
+        this.myStage = myStage;
     }
 
     @FXML
     private void sigPaso(ActionEvent e)
     {
         os.siguienteMomento();
+        actualizarBtnMomentos();
         actualizarGrafico();
         actualizarTablas();
     }
@@ -104,12 +134,46 @@ public class VistaController implements Initializable, Observer, Controller<Obse
     @FXML
     private void admProcesos(ActionEvent e)
     {
-        StageFactory.createStage("/com/sw/view/AdmProcesos.fxml",
-                "Administrador de procesos",
-                StageFactory.RUTA_ESTILOS,
-                Modality.APPLICATION_MODAL,
-                myStage,
-                tablaProcesos.getItems());
+        if (os.getMomento() == OS.MOMENTO_INICIAL)
+            crearVentanaAdmProcesos();
+
+        else if (mostrarConfirmacion("Ya ha iniciado la simulación.", "La simulación se reiniciará. ¿Está seguro?"))
+            crearVentanaAdmProcesos();
+    }
+
+    private void crearVentanaAdmProcesos()
+    {
+        Platform.runLater(() ->
+        {
+            StageFactory.createStage("/com/sw/view/AdmProcesos.fxml",
+                    "Administrador de procesos",
+                    StageFactory.RUTA_ESTILOS,
+                    Modality.APPLICATION_MODAL,
+                    myStage,
+                    tablaProcesos.getItems(),
+                    (Controller) this);
+        });
+    }
+
+    private void reiniciarSimulacion(ObservableList<Proceso> procesos)
+    {
+        os = new OS(10, ram, procesos);
+        os.addObserver(this);
+        actualizarBtnMomentos();
+        actualizarGrafico();
+        actualizarTablas();
+        actualizarEstado(" ");
+    }
+
+    private void actualizarTablas()
+    {
+        tableManager.actualizarItemsTabla(tablaProcesos, procesos);
+
+        tableManager.actualizarItemsTabla(tablaAreasLibres,
+                os.getMemoryHandler().ordenarCeldasMemoriaPorInicio(ram.getAreasLibres()));
+
+        tableManager.actualizarItemsTabla(tablaParticiones,
+                os.getMemoryHandler().ordenarCeldasMemoriaPorInicio(ram.getParticiones()));
     }
 
     @Override
@@ -120,7 +184,7 @@ public class VistaController implements Initializable, Observer, Controller<Obse
 
     private void actualizarGrafico()
     {
-        runLater(() ->
+        Platform.runLater(() ->
         {
             grafico.refrescarGrafico();
             grafico.dibujarRepresentacionGrafica(ram.getAreasLibres(), ram.getParticiones(), ram.getFragmentos());
@@ -129,16 +193,31 @@ public class VistaController implements Initializable, Observer, Controller<Obse
 
     private void actualizarEstado(String mensaje)
     {
-        runLater(() ->
+        Platform.runLater(() ->
         {
             estado.setText(mensaje);
         });
     }
 
-    private void actualizarTablas()
+    private void actualizarBtnMomentos()
     {
-        tablaAreasLibres.refresh();
-        tablaParticiones.refresh();
+        if (os.getMomento() != OS.MOMENTO_FINAL)
+            Platform.runLater(() ->
+            {
+                btnSigPaso.setText("Paso: " + os.getMomento());
+            });
+    }
+
+    private boolean mostrarConfirmacion(String title, String text)
+    {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(text);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        return result.get() == ButtonType.OK;
     }
 
 }

@@ -22,8 +22,8 @@
                     <columns>
                         <TableColumn prefWidth="75.0" text="Proceso" />
                         <TableColumn prefWidth="75.0" text="Tamaño" />
-                        <TableColumn prefWidth="75.0" text="Tiempo llegada" /> 
-                        <TableColumn prefWidth="75.0" text="Tiempo finaliza" />
+                        <TableColumn prefWidth="75.0" text="Tiempo llegada" />
+                        <TableColumn prefWidth="75.0" text="Duración" /> 
                         <TableColumn fx:id="colEliminar" prefWidth="75.0" text="Eliminar" />
                     </columns>
                     <columnResizePolicy>
@@ -51,6 +51,7 @@
                     <columnConstraints>
                         <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
                         <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="10.0" percentWidth="5.0" prefWidth="15.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -59,28 +60,31 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label text="Proceso:" />
-                        <Label text="Tamaño:" GridPane.rowIndex="1" />
-                        <Label text="Tiempo llegada:" GridPane.rowIndex="2" />
-                        <Label text="Tiempo finaliza:" GridPane.rowIndex="3" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Proceso:" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Tamaño:" GridPane.rowIndex="1" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Tiempo llegada:" GridPane.rowIndex="2" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Duración:" GridPane.rowIndex="3" />
                         <TextField fx:id="inputNombreProceso" promptText="Nombre del proceso..." GridPane.columnIndex="1" />
-                        <TextField fx:id="inputTamProceso" promptText="Tamaño (en K) del proceso..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="inputTamProceso" promptText="Tamaño del proceso..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="inputLlegadaProceso" promptText="Tiempo de llegada del proceso..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="inputFinProceso" promptText="Tiempo en que finaliza el proceso..." GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="inputDuracion" promptText="Duración del proceso..." GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="K" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="K" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="K" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                     </children>
                     <VBox.margin>
                         <Insets left="50.0" right="50.0" />
                     </VBox.margin>
                 </GridPane>
-            <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="NEVER">
-               <VBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </VBox.margin>
-               <children>
-                      <Button mnemonicParsing="false" text="Añadir proceso" />
-                  <Button fx:id="btnModificarProceso" disable="true" mnemonicParsing="false" text="Modificar proceso" />
-               </children>
-            </HBox>
+                <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="NEVER">
+                    <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                    </VBox.margin>
+                    <children>
+                        <Button fx:id="btnAnadirProceso" mnemonicParsing="false" onAction="#accionBtnAnadirProceso" text="Añadir proceso" />
+                        <Button fx:id="btnModificarProceso" disable="true" mnemonicParsing="false" onAction="#accionBtnModificarProceso" text="Modificar proceso" />
+                    </children>
+                </HBox>
             </children>
         </VBox>
     </top>

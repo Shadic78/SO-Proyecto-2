@@ -133,13 +133,14 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
         os.addObserver(this);
         actualizarBtnMomentos();
         repintarGrafico();
-        tableManager.actualizarTablaProcesos(vista.getTablaProcesos(), this.procesos);
         actualizarTablas();
         actualizarEstado(" ");
     }
 
     private void actualizarTablas()
     {
+        tableManager.actualizarTablaProcesos(vista.getTablaProcesos(), procesos);
+
         tableManager.actualizarTablaAreasLibres(vista.getTablaAreasLibres(),
                 os.getMemoryHandler().ordenarCeldasMemoriaPorInicio(ram.getAreasLibres()));
 

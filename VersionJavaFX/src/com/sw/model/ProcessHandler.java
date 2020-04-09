@@ -1,8 +1,31 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2020 SonBear.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.sw.model;
 
+import java.util.Comparator;
 import java.util.Observable;
 import javafx.collections.FXCollections;
-import static javafx.collections.FXCollections.observableArrayList;
 import javafx.collections.ObservableList;
 
 /**
@@ -13,14 +36,15 @@ public class ProcessHandler extends Observable implements Notificador
 {
 
     private final RAM ram;
-    private final ObservableList<Proceso> colaProcesos;
+    private final ObservableList<Proceso> procesos;
     private final ObservableList<Proceso> procesosEnEspera;
 
-    public ProcessHandler(RAM ram, ObservableList<Proceso> colaProcesos)
+    public ProcessHandler(RAM ram, ObservableList<Proceso> procesos)
     {
         this.ram = ram;
-        this.colaProcesos = colaProcesos;
-        procesosEnEspera = observableArrayList();
+        this.procesos = procesos;
+        this.procesosEnEspera = FXCollections.observableArrayList();
+        ordenarProcesosPorTiempoLlegada(procesos);
     }
 
     public boolean insertarProcesoEnMemoria()
@@ -149,11 +173,11 @@ public class ProcessHandler extends Observable implements Notificador
         for (int i = 0; i < particiones.size(); i++)
         {
             Proceso procesoEnMemoria = particiones.get(i).getProceso();
-            Proceso procesoEnCola = colaProcesos.get(0);
+            Proceso procesoEnCola = procesos.get(0);
 
-            int finalizacion = procesoEnMemoria.getLlegada() + procesoEnMemoria.getDuracion();
+            int finalizacion = procesoEnMemoria.getTiempoLlegada() + procesoEnMemoria.getDuracion();
 
-            if (finalizacion <= procesoEnCola.getLlegada())
+            if (finalizacion <= procesoEnCola.getTiempoLlegada())
                 return i;
         }
 
@@ -170,12 +194,12 @@ public class ProcessHandler extends Observable implements Notificador
         // Encontrar el proceso con la llegada + duración más corta.
         Particion particionARetirar = particiones.get(0);
         Proceso proceso = particiones.get(0).getProceso();
-        int menorTiempoFinalizacion = proceso.getLlegada() + proceso.getDuracion();
+        int menorTiempoFinalizacion = proceso.getTiempoLlegada() + proceso.getDuracion();
 
         for (int i = 1; i < particiones.size(); i++)
         {
             proceso = particiones.get(i).getProceso();
-            int tiempoFinalizacion = proceso.getLlegada() + proceso.getDuracion();
+            int tiempoFinalizacion = proceso.getTiempoLlegada() + proceso.getDuracion();
 
             if (tiempoFinalizacion < menorTiempoFinalizacion)
             {
@@ -186,6 +210,11 @@ public class ProcessHandler extends Observable implements Notificador
 
         retirarProcesoEnMemoria(particionARetirar);
         notificar("Se retiró: " + particionARetirar.getProceso().getNombre());
+    }
+
+    private void ordenarProcesosPorTiempoLlegada(ObservableList<Proceso> procesos)
+    {
+        procesos.sort(Comparator.comparing(Proceso::getTiempoLlegada));
     }
 
     @Override
@@ -203,7 +232,7 @@ public class ProcessHandler extends Observable implements Notificador
 
     private void anadirProcesoEnCola(Proceso procesoEnCola)
     {
-        colaProcesos.add(procesoEnCola);
+        procesos.add(procesoEnCola);
     }
 
     private Proceso obtenerSigProcesoEnEspera()
@@ -223,7 +252,7 @@ public class ProcessHandler extends Observable implements Notificador
 
     private Proceso obtenerProcesoEnCola(int indexProcesoCola)
     {
-        return colaProcesos.get(indexProcesoCola);
+        return procesos.get(indexProcesoCola);
     }
 
     private void eliminarSigProcesoEnEspera()
@@ -243,7 +272,7 @@ public class ProcessHandler extends Observable implements Notificador
 
     private void eliminarProcesoEnCola(int indexProcesoCola)
     {
-        colaProcesos.remove(indexProcesoCola);
+        procesos.remove(indexProcesoCola);
     }
 
     public boolean hayProcesosEnEspera()
@@ -263,7 +292,7 @@ public class ProcessHandler extends Observable implements Notificador
 
     public ObservableList<Proceso> getColaProcesos()
     {
-        return colaProcesos;
+        return procesos;
     }
 
     public ObservableList<Proceso> getProcesosEspera()
