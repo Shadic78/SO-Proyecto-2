@@ -11,12 +11,7 @@ public class Particion extends CeldaMemoria
 
     public Particion(Proceso proceso, int inicio, int size)
     {
-        this(proceso, 1, inicio, size);
-    }
-
-    public Particion(Proceso proceso, int posicion, int inicio, int size)
-    {
-        super(posicion, inicio, size);
+        super(inicio, size);
         this.proceso = proceso;
     }
 

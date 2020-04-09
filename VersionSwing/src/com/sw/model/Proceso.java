@@ -41,7 +41,7 @@ public class Proceso
         this.size = size;
     }
 
-    public int getLlegada()
+    public int getTiempoLlegada()
     {
         return llegada;
     }

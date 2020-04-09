@@ -8,24 +8,17 @@ public abstract class CeldaMemoria
 {
 
     private int inicio;
-    private int posicion;
     private int size;
 
     public CeldaMemoria()
     {
-        this(1, 0, 0);
+        this(0, 0);
     }
 
     public CeldaMemoria(int inicio, int size)
     {
-        this(1, inicio, size);
-    }
-
-    public CeldaMemoria(int posicion, int inicio, int size)
-    {
         this.inicio = inicio;
         this.size = size;
-        this.posicion = posicion;
     }
 
     public int getInicio()
@@ -46,16 +39,6 @@ public abstract class CeldaMemoria
     public void setSize(int size)
     {
         this.size = size;
-    }
-
-    public int getPosicion()
-    {
-        return posicion;
-    }
-
-    public void setPosicion(int posicion)
-    {
-        this.posicion = posicion;
     }
 
     public void ocupar(int size)

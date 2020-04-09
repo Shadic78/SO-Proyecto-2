@@ -1,6 +1,7 @@
 package com.sw.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Observable;
 
 /**
@@ -11,14 +12,15 @@ public class ProcessHandler extends Observable implements Notificador
 {
 
     private final RAM ram;
-    private final ArrayList<Proceso> colaProcesos;
+    private final ArrayList<Proceso> procesos;
     private final ArrayList<Proceso> procesosEnEspera;
 
-    public ProcessHandler(RAM ram, ArrayList<Proceso> colaProcesos)
+    public ProcessHandler(RAM ram, ArrayList<Proceso> procesos)
     {
         this.ram = ram;
-        this.colaProcesos = colaProcesos;
+        this.procesos = procesos;
         procesosEnEspera = new ArrayList<>();
+        ordenarProcesosPorTiempoLlegada(procesos);
     }
 
     public boolean insertarProcesoEnMemoria()
@@ -147,11 +149,11 @@ public class ProcessHandler extends Observable implements Notificador
         for (int i = 0; i < particiones.size(); i++)
         {
             Proceso procesoEnMemoria = particiones.get(i).getProceso();
-            Proceso procesoEnCola = colaProcesos.get(0);
+            Proceso procesoEnCola = procesos.get(0);
 
-            int finalizacion = procesoEnMemoria.getLlegada() + procesoEnMemoria.getDuracion();
+            int finalizacion = procesoEnMemoria.getTiempoLlegada() + procesoEnMemoria.getDuracion();
 
-            if (finalizacion <= procesoEnCola.getLlegada())
+            if (finalizacion <= procesoEnCola.getTiempoLlegada())
                 return i;
         }
 
@@ -168,12 +170,12 @@ public class ProcessHandler extends Observable implements Notificador
         // Encontrar el proceso con la llegada + duración más corta.
         Particion particionARetirar = particiones.get(0);
         Proceso proceso = particiones.get(0).getProceso();
-        int menorTiempoFinalizacion = proceso.getLlegada() + proceso.getDuracion();
+        int menorTiempoFinalizacion = proceso.getTiempoLlegada() + proceso.getDuracion();
 
         for (int i = 1; i < particiones.size(); i++)
         {
             proceso = particiones.get(i).getProceso();
-            int tiempoFinalizacion = proceso.getLlegada() + proceso.getDuracion();
+            int tiempoFinalizacion = proceso.getTiempoLlegada() + proceso.getDuracion();
 
             if (tiempoFinalizacion < menorTiempoFinalizacion)
             {
@@ -184,6 +186,11 @@ public class ProcessHandler extends Observable implements Notificador
 
         retirarProcesoEnMemoria(particionARetirar);
         notificar("Se retiró: " + particionARetirar.getProceso().getNombre());
+    }
+
+    private void ordenarProcesosPorTiempoLlegada(ArrayList<Proceso> procesos)
+    {
+        procesos.sort(Comparator.comparing(Proceso::getTiempoLlegada));
     }
 
     @Override
@@ -201,7 +208,7 @@ public class ProcessHandler extends Observable implements Notificador
 
     private void anadirProcesoEnCola(Proceso procesoEnCola)
     {
-        colaProcesos.add(procesoEnCola);
+        procesos.add(procesoEnCola);
     }
 
     private Proceso obtenerSigProcesoEnEspera()
@@ -221,7 +228,7 @@ public class ProcessHandler extends Observable implements Notificador
 
     private Proceso obtenerProcesoEnCola(int indexProcesoCola)
     {
-        return colaProcesos.get(indexProcesoCola);
+        return procesos.get(indexProcesoCola);
     }
 
     private void eliminarSigProcesoEnEspera()
@@ -241,7 +248,7 @@ public class ProcessHandler extends Observable implements Notificador
 
     private void eliminarProcesoEnCola(int indexProcesoCola)
     {
-        colaProcesos.remove(indexProcesoCola);
+        procesos.remove(indexProcesoCola);
     }
 
     public boolean hayProcesosEnEspera()
@@ -259,9 +266,14 @@ public class ProcessHandler extends Observable implements Notificador
         return !ram.getParticiones().isEmpty();
     }
 
+    public void limpiarProcesosEnEspera()
+    {
+        getProcesosEspera().clear();
+    }
+
     public ArrayList<Proceso> getProcesos()
     {
-        return colaProcesos;
+        return procesos;
     }
 
     public ArrayList<Proceso> getProcesosEspera()

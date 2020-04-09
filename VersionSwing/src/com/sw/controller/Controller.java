@@ -2,7 +2,7 @@ package com.sw.controller;
 
 /**
  *
- * @author Nicolás
+ * @author Eusebio Ajax
  * @param <E>
  */
 public interface Controller<E>

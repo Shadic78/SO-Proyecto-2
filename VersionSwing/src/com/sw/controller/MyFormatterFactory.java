@@ -5,7 +5,7 @@ import javax.swing.JFormattedTextField;
 
 /**
  *
- * @author Nicolás
+ * @author Eusebio Ajax
  */
 public class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory
 {
