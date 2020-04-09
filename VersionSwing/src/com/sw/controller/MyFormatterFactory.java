@@ -43,7 +43,12 @@ public class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFac
             {
                 try
                 {
-                    return Integer.parseInt(text);
+                    int number = Integer.parseInt(text);
+
+                    if (number <= 0)
+                        throw new ParseException(text, 0);
+
+                    return number;
 
                 } catch (NumberFormatException e)
                 {

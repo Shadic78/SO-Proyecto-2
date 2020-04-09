@@ -88,7 +88,7 @@ public class VistaController implements Initializable, Observer, Controller<Obse
 
     private void initTablas()
     {
-        tableManager.inicializarTablaProcesos(tablaProcesos);
+        tableManager.initDataTablaProcesos(tablaProcesos);
         tableManager.inicializarTablaAreasLibres(tablaAreasLibres);
         tableManager.inicializarTablaParticiones(tablaParticiones);
     }

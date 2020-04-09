@@ -18,11 +18,27 @@ public class ActionButtonTableCell<S> extends TableCell<S, Button>
     public ActionButtonTableCell(String label, Consumer<S> consumer)
     {
         actionButton = new Button(label);
+        actionButton.setStyle("-fx-background-color: tomato;");
+        initButtonEvents(consumer);
+        actionButton.setMaxWidth(Double.MAX_VALUE);
+    }
+
+    private void initButtonEvents(Consumer<S> consumer)
+    {
+        actionButton.setOnMouseEntered(e ->
+        {
+            actionButton.setStyle("-fx-background-color: red;");
+        });
+
+        actionButton.setOnMouseExited(e ->
+        {
+            actionButton.setStyle("-fx-background-color: tomato;");
+        });
+
         actionButton.setOnAction(e ->
         {
             consumer.accept(getCurrentItem());
         });
-        actionButton.setMaxWidth(Double.MAX_VALUE);
     }
 
     public S getCurrentItem()
