@@ -37,6 +37,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -99,11 +100,21 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
     private void accionBtnSigMomento(ActionEvent e)
     {
         os.siguienteMomento();
+        actualizarBtnMomentos();
         repintarGrafico();
         actualizarTablas();
     }
 
     private void accionBtnAdmProcesos(ActionEvent e)
+    {
+        if (os.getMomento() == OS.MOMENTO_INICIAL)
+            crearVentanaAdmProcesos();
+
+        else if (mostrarConfirmacion("Ya ha iniciado la simulación.", "La simulación se reiniciará. ¿Está seguro?"))
+            crearVentanaAdmProcesos();
+    }
+
+    private void crearVentanaAdmProcesos()
     {
         EventQueue.invokeLater(() ->
         {
@@ -120,6 +131,7 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
     {
         os = new OS(10, ram, procesos);
         os.addObserver(this);
+        actualizarBtnMomentos();
         repintarGrafico();
         tableManager.actualizarTablaProcesos(vista.getTablaProcesos(), this.procesos);
         actualizarTablas();
@@ -133,13 +145,6 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
 
         tableManager.actualizarTablaParticiones(vista.getTablaParticiones(),
                 os.getMemoryHandler().ordenarCeldasMemoriaPorInicio(ram.getParticiones()));
-    }
-
-    private void vaciarTablas()
-    {
-        tableManager.vaciarTabla(vista.getTablaProcesos());
-        tableManager.vaciarTabla(vista.getTablaAreasLibres());
-        tableManager.vaciarTabla(vista.getTablaAreasLibres());
     }
 
     @Override
@@ -162,6 +167,20 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
         {
             vista.getEstado().setText(estado);
         });
+    }
+
+    private void actualizarBtnMomentos()
+    {
+        if (os.getMomento() != OS.MOMENTO_FINAL)
+            EventQueue.invokeLater(() ->
+            {
+                vista.getBtnSigMomento().setText("Paso: " + os.getMomento());
+            });
+    }
+
+    private boolean mostrarConfirmacion(String titulo, String text)
+    {
+        return JOptionPane.showConfirmDialog(vista, text, titulo, JOptionPane.OK_CANCEL_OPTION) == 0;
     }
 
 }

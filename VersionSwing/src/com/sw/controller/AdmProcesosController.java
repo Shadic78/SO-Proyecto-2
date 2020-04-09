@@ -1,4 +1,3 @@
-
 /*
  * The MIT License
  *
@@ -120,7 +119,8 @@ public class AdmProcesosController implements Controller<ArrayList<Proceso>>
     private void accionBtnModificarProceso(ActionEvent e)
     {
         if (entradasNumericasValidas())
-            if (nombreProcesoValido(getNombreProceso()) && !nombreProcesoRepetido(getNombreProceso(), procesoSeleccionado))
+            if (nombreProcesoValido(getNombreProceso())
+                    && !nombreProcesoRepetido(getNombreProceso(), procesoSeleccionado))
                 modificarProceso(procesoSeleccionado);
 
             else if (mostrarConfirmacion("El nombre del proceso no es válido.",
@@ -248,16 +248,16 @@ public class AdmProcesosController implements Controller<ArrayList<Proceso>>
         vistaFrm.getDuracion().setText("");
     }
 
-    private void desactivarBotonesSecundarios()
-    {
-        vistaFrm.getModificarProceso().setEnabled(false);
-        vistaFrm.getEliminarProceso().setEnabled(false);
-    }
-
     private void activarBotonesSecundarios()
     {
         vistaFrm.getModificarProceso().setEnabled(true);
         vistaFrm.getEliminarProceso().setEnabled(true);
+    }
+
+    private void desactivarBotonesSecundarios()
+    {
+        vistaFrm.getModificarProceso().setEnabled(false);
+        vistaFrm.getEliminarProceso().setEnabled(false);
     }
 
     private void actualizarTablaProcesos()

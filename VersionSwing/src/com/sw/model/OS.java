@@ -35,13 +35,18 @@ import java.util.Observer;
 public class OS extends Observable implements Observer, Notificador
 {
 
+    public static final int MOMENTO_INICIAL = 0;
+    public static final int MOMENTO_FINAL = -1;
+
     private final MemoryHandler memoryHandler;
     private final ProcessHandler processHandler;
     private final int MEMORIA_OS;
+    private int momento;
 
     public OS(final int MEMORIA_OS, RAM ram, ArrayList<Proceso> procesos)
     {
         this.MEMORIA_OS = MEMORIA_OS;
+        this.momento = MOMENTO_INICIAL;
         memoryHandler = new MemoryHandler(ram);
 
         processHandler = new ProcessHandler(ram, new ArrayList<>(procesos));
@@ -86,15 +91,26 @@ public class OS extends Observable implements Observer, Notificador
             processHandler.insertarProcesoEnMemoria();
 
         else
+        {
             notificar("El programa ha terminado");
+            momento = MOMENTO_FINAL;
+        }
 
         memoryHandler.compactarMemoria();
         memoryHandler.revisarFragmentacion();
+
+        if (momento != MOMENTO_FINAL)
+            momento++;
     }
 
     public int MEMORIA_OS()
     {
         return MEMORIA_OS;
+    }
+
+    public int getMomento()
+    {
+        return momento;
     }
 
     @Override
