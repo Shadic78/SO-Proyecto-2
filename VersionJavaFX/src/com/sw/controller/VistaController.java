@@ -129,6 +129,10 @@ public class VistaController implements Initializable, Observer, Controller<Obse
         actualizarBtnMomentos();
         actualizarGrafico();
         actualizarTablas();
+
+        if (os.getMomento() == OS.MOMENTO_FINAL)
+            if (mostrarConfirmacion("Simulación terminada.", "La simulación ha terminado. ¿Desea salir?"))
+                Platform.exit();
     }
 
     @FXML
@@ -201,11 +205,10 @@ public class VistaController implements Initializable, Observer, Controller<Obse
 
     private void actualizarBtnMomentos()
     {
-        if (os.getMomento() != OS.MOMENTO_FINAL)
-            Platform.runLater(() ->
-            {
-                btnSigPaso.setText("Paso: " + os.getMomento());
-            });
+        Platform.runLater(() ->
+        {
+            btnSigPaso.setText(os.getMomento() != OS.MOMENTO_FINAL ? "Paso: " + os.getMomento() : "Finalizada");
+        });
     }
 
     private boolean mostrarConfirmacion(String title, String text)

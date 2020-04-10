@@ -103,6 +103,10 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
         actualizarBtnMomentos();
         repintarGrafico();
         actualizarTablas();
+
+        if (os.getMomento() == OS.MOMENTO_FINAL)
+            if (mostrarConfirmacion("Simulación terminada.", "La simulación ha terminado. ¿Desea salir?"))
+                System.exit(0);
     }
 
     private void accionBtnAdmProcesos(ActionEvent e)
@@ -172,11 +176,10 @@ public class VistaController implements Observer, Controller<ArrayList<Proceso>>
 
     private void actualizarBtnMomentos()
     {
-        if (os.getMomento() != OS.MOMENTO_FINAL)
-            EventQueue.invokeLater(() ->
-            {
-                vista.getBtnSigMomento().setText("Paso: " + os.getMomento());
-            });
+        EventQueue.invokeLater(() ->
+        {
+            vista.getBtnSigMomento().setText(os.getMomento() != OS.MOMENTO_FINAL ? "Paso: " + os.getMomento() : "Finalizada");
+        });
     }
 
     private boolean mostrarConfirmacion(String titulo, String text)

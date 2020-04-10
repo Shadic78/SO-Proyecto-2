@@ -92,7 +92,7 @@ public class OS extends Observable implements Observer, Notificador
 
         else
         {
-            notificar("El programa ha terminado");
+            notificar("La simulación ha terminado");
             momento = MOMENTO_FINAL;
         }
 

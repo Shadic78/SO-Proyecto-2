@@ -133,11 +133,7 @@ public class AdmProcesosController implements Controller<ArrayList<Proceso>>
 
     private void accionBtnEliminarProceso(ActionEvent e)
     {
-        int[] filasSeleccionadas = tableManager.obtenerFilasSeleccionadas(vistaFrm.getTablaProcesos());
-
-        for (int i = filasSeleccionadas.length - 1; i >= 0; i--)
-            eliminarProceso(procesos.get(filasSeleccionadas[i]));
-
+        eliminarProcesosSelecionados();
         actualizarTablaProcesos();
         desactivarBotonesSecundarios();
         limpiarCampos();
@@ -148,6 +144,7 @@ public class AdmProcesosController implements Controller<ArrayList<Proceso>>
         procesos.add(proceso);
         actualizarTablaProcesos();
         desactivarBotonesSecundarios();
+        tableManager.selecionarUltimaFila(vistaFrm.getTablaProcesos());
     }
 
     private void modificarProceso(Proceso proceso)
@@ -158,6 +155,14 @@ public class AdmProcesosController implements Controller<ArrayList<Proceso>>
         proceso.setDuracion(getDuracionProceso());
 
         actualizarTablaProcesos();
+    }
+
+    private void eliminarProcesosSelecionados()
+    {
+        int[] filasSeleccionadas = tableManager.obtenerFilasSeleccionadas(vistaFrm.getTablaProcesos());
+
+        for (int i = filasSeleccionadas.length - 1; i >= 0; i--)
+            eliminarProceso(procesos.get(filasSeleccionadas[i]));
     }
 
     private Proceso getNuevoProceso()
