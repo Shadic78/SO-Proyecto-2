@@ -28,20 +28,20 @@ public class CtrlFrmMemoria
 
     public void siguientePaso()
     {
-        if (Main.colaProcesos.size() > 0)
-            if (modeloProcesos.terminaraUnProceso(Main.particiones, Main.colaProcesos) >= 0)
-                modeloProcesos.retirarProcesoEnMemoria(modeloProcesos.terminaraUnProceso(Main.particiones, Main.colaProcesos));
+        if (Main.procesos.size() > 0)
+            if (modeloProcesos.terminaraUnProceso(Main.particiones, Main.procesos) >= 0)
+                modeloProcesos.retirarProcesoEnMemoria(modeloProcesos.terminaraUnProceso(Main.particiones, Main.procesos));
             else
-                modeloProcesos.insertarProcesoEnMemoria(Main.areasLibres, Main.particiones, Main.colaProcesos, Main.colaAuxiliarProcesos);
+                modeloProcesos.insertarProcesoEnMemoria(Main.areasLibres, Main.particiones, Main.procesos, Main.colaAuxiliarProcesos);
         else if (modeloProcesos.hayProcesosEnMemoria(Main.particiones))
             if (modeloProcesos.hayProcesosEnColaAuxiliar(Main.colaAuxiliarProcesos))
             {
-                if (!modeloProcesos.insertarProcesoEnMemoria(Main.areasLibres, Main.particiones, Main.colaProcesos, Main.colaAuxiliarProcesos))
+                if (!modeloProcesos.insertarProcesoEnMemoria(Main.areasLibres, Main.particiones, Main.procesos, Main.colaAuxiliarProcesos))
                     modeloProcesos.retirarSiguienteProceso(Main.particiones, Main.areasLibres);
             } else
                 modeloProcesos.retirarSiguienteProceso(Main.particiones, Main.areasLibres);
         else if (modeloProcesos.hayProcesosEnColaAuxiliar(Main.colaAuxiliarProcesos))
-            modeloProcesos.insertarProcesoEnMemoria(Main.areasLibres, Main.particiones, Main.colaProcesos, Main.colaAuxiliarProcesos);
+            modeloProcesos.insertarProcesoEnMemoria(Main.areasLibres, Main.particiones, Main.procesos, Main.colaAuxiliarProcesos);
         else
         {
             JOptionPane.showMessageDialog(null, "El programa termino");
@@ -49,7 +49,7 @@ public class CtrlFrmMemoria
         }
 
         modeloMemoria.compactarMemoria(Main.areasLibres);
-        //modeloTablas.actualizarTablaProcesos(form.getTableProcesos(), Main.colaProcesos);
+        //modeloTablas.actualizarTablaProcesos(form.getTableProcesos(), Main.procesos);
         modeloTablas.actualizarTablaAreasLibres(form.getTableEspaciosLibres(), Main.areasLibres);
         modeloTablas.actualizarTablaParticiones(form.getTableParticiones(), Main.particiones);
 
@@ -57,7 +57,7 @@ public class CtrlFrmMemoria
         /*System.out.println("\n");
         System.out.println("Libres: " + Main.areasLibres);
         System.out.println("Particiones: " + Main.particiones);
-        System.out.println("Procesos: " + Main.colaProcesos);
+        System.out.println("Procesos: " + Main.procesos);
         System.out.println("Aux: " + Main.colaAuxiliarProcesos);
         System.out.println("\n");*/
     }

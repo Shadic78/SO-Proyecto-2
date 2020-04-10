@@ -168,6 +168,13 @@ public class TableManager
         tableModel.addRow(fila);
     }
 
+    public void selecionarUltimaFila(JTable table)
+    {
+        table.clearSelection();
+        int lastIndex = table.getModel().getRowCount() - 1;
+        table.getSelectionModel().setSelectionInterval(lastIndex, lastIndex);
+    }
+
     public int[] obtenerFilasSeleccionadas(JTable table)
     {
         return table.getSelectedRows();

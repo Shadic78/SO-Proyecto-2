@@ -26,7 +26,7 @@ public class FrmMemoria extends javax.swing.JFrame
     {
         initComponents();
         ModeloTablas modeloTablas = new ModeloTablas();
-        modeloTablas.actualizarTablaProcesos(getTableProcesos(), Main.colaProcesos);
+        modeloTablas.actualizarTablaProcesos(getTableProcesos(), Main.procesos);
         modeloTablas.actualizarTablaAreasLibres(getTableEspaciosLibres(), Main.areasLibres);
         modeloTablas.actualizarTablaParticiones(getTableParticiones(), Main.particiones);
     }
